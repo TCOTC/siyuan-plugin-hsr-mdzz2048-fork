@@ -13,13 +13,13 @@
         </div>
         {{ resultIndex + "/" + resultCount }}
         <div class="search-tools">
-            <div @click="clickLast" @mouseover.stop="showToolTip($event, '上一个')">
+            <div @click="clickLast" @mouseover.stop="showToolTip($event, this.i18n.back)">
                 <Svg icon="#iconBack" class="icon--14_14"></Svg>
             </div>
-            <div @click="clickNext" @mouseover.stop="showToolTip($event, '下一个')">
+            <div @click="clickNext" @mouseover.stop="showToolTip($event, this.i18n.forward)">
                 <Svg icon="#iconForward" class="icon--14_14"></Svg>
             </div>
-            <div @click="clickClose" @mouseover.stop="showToolTip($event, '关闭')">
+            <div @click="clickClose" @mouseover.stop="showToolTip($event, this.i18n.close)">
                 <Svg icon="#iconClose" class="icon--14_14"></Svg>
             </div>
         </div>
@@ -35,7 +35,7 @@ const searchText = ref("")
 const resultCount = ref(0)
 const resultIndex = ref(0)
 const resultRange = ref()
-const placeholder = "搜索"
+const placeholder = this.i18n.search
 
 const props = defineProps<{
     document: Element,
@@ -46,7 +46,10 @@ const props = defineProps<{
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
 function highlightHitResult(value: string) {
-    
+    // 自动重置搜索结果索引计数为 0
+    resultIndex.value = 0
+
+/*
     // 创建 createTreeWalker 迭代器，用于遍历文本节点，保存到一个数组
     const treeWalker = document.createTreeWalker(props.document, NodeFilter.SHOW_TEXT)
     const allTextNodes: Node[] = []
@@ -55,6 +58,28 @@ function highlightHitResult(value: string) {
         allTextNodes.push(currentNode)
         currentNode = treeWalker.nextNode()
     }
+*/
+
+    // 上面的换成下面这个：
+    // 首先，选取所有符合条件的元素
+    const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
+
+    // 准备一个数组来保存所有文本节点
+    const allTextNodes = [];
+
+    // 对每个符合条件的元素，使用 createTreeWalker 遍历其文本节点
+    elements.forEach(element => {
+        const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        let currentNode = treeWalker.nextNode();
+        while (currentNode) {
+            allTextNodes.push(currentNode);
+            currentNode = treeWalker.nextNode();
+        }
+    });
+    // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点
+
+
+
 
     // todo: 过滤非内容块节点
     // console.log(allTextNodes)
@@ -101,6 +126,9 @@ function highlightHitResult(value: string) {
 
     // 注册高亮
     CSS.highlights.set("search-results", searchResultsHighlight)
+
+    // 滚动页面
+    // scroollIntoRanges(resultIndex.value)
 }
 function scroollIntoRanges(index: number) {
     const ranges = resultRange.value as Range[]

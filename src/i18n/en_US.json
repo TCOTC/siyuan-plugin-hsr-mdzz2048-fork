@@ -11,5 +11,9 @@
     "confirmRemove": "Confirm to delete the data in ${name}?",
     "insertEmoji": "Insert Emoji",
     "removeSpace": "Remove Space",
-    "topBarTitle": "Highlight search"
+    "topBarTitle": "Highlight search",
+    "search": "Search",
+    "back": "Back",
+    "forward": "Forward",
+    "close": "Close"
   }
