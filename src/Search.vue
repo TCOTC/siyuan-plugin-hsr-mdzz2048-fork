@@ -68,13 +68,19 @@ function highlightHitResult(value: string) {
         return false;
     }
 
+    // 判断元素是否可见
+    function isElementVisible(element) {
+    const style = window.getComputedStyle(element);
+    return style.display !== 'none' && style.visibility !== 'hidden';
+    }
+
     // 对每个符合条件的元素，首先检查它是否是已选元素的后代，如果不是，则使用 createTreeWalker 遍历其文本节点
     elements.forEach(element => {
         // 检查当前元素是否是任何其他已选元素的后代
         const isNested = Array.from(elements).some(otherElement => otherElement !== element && isDescendant(otherElement, element));
         
         // 如果当前元素不是其他元素的后代，则遍历其文本节点
-        if (!isNested) {
+        if (!isNested && isElementVisible(element)) { // 判断元素是否可见
             const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
             let currentNode = treeWalker.nextNode();
             while (currentNode) {
