@@ -9,6 +9,7 @@
                 v-model="searchText"
                 @change="highlightHitResult(searchText)"
                 @keyup.enter="highlightHitResult(searchText)"
+                @input="onSearchTextChange"
             />
         </div>
         {{ resultIndex + "/" + resultCount }}
@@ -41,6 +42,19 @@ const props = defineProps<{
     document: Element,
     element: Element,
 }>()
+
+// 当文本框内容变动后超过2秒没有再次变动时，会触发 highlightHitResult 函数
+let timer: number | null = null;
+function onSearchTextChange(value: string) {
+    if (timer) {
+        clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+        highlightHitResult(value);
+    }, 2000);
+}
+
 
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
