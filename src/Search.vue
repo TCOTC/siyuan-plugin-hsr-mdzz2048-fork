@@ -156,7 +156,7 @@ function clickLast() {
     if (resultIndex.value > 1) {
         resultIndex.value = resultIndex.value - 1
     }
-    else if (resultIndex.value <= 1) {
+    else if (resultIndex.value <= 1 && resultCount.value != 0) {
         resultIndex.value = resultCount.value
     }
     else if (resultCount.value == 0) {
