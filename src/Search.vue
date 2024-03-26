@@ -49,7 +49,7 @@ function highlightHitResult(value: string) {
     // 自动重置搜索结果索引计数为 0
     resultIndex.value = 0
 
-
+/*
     // 创建 createTreeWalker 迭代器，用于遍历文本节点，保存到一个数组
     const treeWalker = document.createTreeWalker(props.document, NodeFilter.SHOW_TEXT)
     const allTextNodes: Node[] = []
@@ -58,10 +58,9 @@ function highlightHitResult(value: string) {
         allTextNodes.push(currentNode)
         currentNode = treeWalker.nextNode()
     }
+*/
 
-    // 可能有问题，回滚一下看看
     // 上面的换成下面这个：
-/*
     // 首先，选取所有符合条件的元素
     const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
 
@@ -78,7 +77,7 @@ function highlightHitResult(value: string) {
         }
     });
     // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点
-*/
+
 
 
 
@@ -143,7 +142,7 @@ function clickLast() {
     if (resultIndex.value > 1) {
         resultIndex.value = resultIndex.value - 1
     }
-    else if (resultIndex.value < 1) {
+    else if (resultIndex.value <= 1) {
         resultIndex.value = resultCount.value
     }
     scroollIntoRanges(resultIndex.value -1)
@@ -151,6 +150,9 @@ function clickLast() {
 function clickNext() {
     if (resultIndex.value < resultCount.value) {
         resultIndex.value = resultIndex.value + 1
+    }
+    else if (resultIndex.value >= resultCount.value) {
+        resultIndex.value = 1
     }
     scroollIntoRanges(resultIndex.value -1)
 }

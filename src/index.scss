@@ -8,7 +8,8 @@
     z-index: 5;
 }
 .highlight-search-result .search-dialog .search-tools #search-tools-close {
-    transform: scale(0.84,0.84);
+    height: 11.85px;
+    width: 11.85px;
 }
 ::highlight(search-results) {
     background-color: rgb(235 235 5);
