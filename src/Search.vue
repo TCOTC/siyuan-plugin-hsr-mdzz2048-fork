@@ -13,14 +13,14 @@
         </div>
         {{ resultIndex + "/" + resultCount }}
         <div class="search-tools">
-            <div @click="clickLast" @mouseover.stop="showToolTip($event, this.i18n.back)">
-                <Svg icon="#iconBack" class="icon--14_14"></Svg>
+            <div @click="clickLast">
+                <Svg icon="#iconUp" class="icon--14_14"></Svg>
             </div>
-            <div @click="clickNext" @mouseover.stop="showToolTip($event, this.i18n.forward)">
-                <Svg icon="#iconForward" class="icon--14_14"></Svg>
+            <div @click="clickNext">
+                <Svg icon="#iconDown" class="icon--14_14"></Svg>
             </div>
-            <div @click="clickClose" @mouseover.stop="showToolTip($event, this.i18n.close)">
-                <Svg icon="#iconClose" class="icon--14_14"></Svg>
+            <div @click="clickClose">
+                <Svg icon="#iconClose" class="icon--14_14" id="search-tools-close"></Svg>
             </div>
         </div>
     </div>
@@ -29,13 +29,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Svg from "./Svg.vue"
-import { showToolTip } from "./utils/showtips";
+// import { showToolTip } from "./utils/showtips";
 
 const searchText = ref("")
 const resultCount = ref(0)
 const resultIndex = ref(0)
 const resultRange = ref()
-const placeholder = this.i18n.search
+const placeholder = "Enter"
 
 const props = defineProps<{
     document: Element,
