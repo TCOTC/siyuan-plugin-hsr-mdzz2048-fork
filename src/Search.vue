@@ -9,7 +9,7 @@
                 v-model="searchText"
                 @change="highlightHitResult(searchText)"
                 @keyup.enter="highlightHitResult(searchText)"
-                @input="onSearchTextChange"
+                @input="handleInput"
             />
         </div>
         {{ resultIndex + "/" + resultCount }}
@@ -44,15 +44,15 @@ const props = defineProps<{
 }>()
 
 // 当文本框内容变动后超过2秒没有再次变动时，会触发 highlightHitResult 函数
-let timer: number | null = null;
-function onSearchTextChange(value: string) {
-    if (timer) {
-        clearTimeout(timer);
-    }
+// const searchText = ref(''); // v-model 绑定的变量
+let typingTimer: number | undefined; // 更新这里，初始化为 undefined
+const doneTypingInterval = 2000; // 2秒
 
-    timer = setTimeout(() => {
-        highlightHitResult(value);
-    }, 2000);
+function handleInput() {
+    clearTimeout(typingTimer); // 清除之前的定时器
+    typingTimer = window.setTimeout(() => { // 使用 window.setTimeout 并更新这里
+        highlightHitResult(searchText.value); // 使用 .value 访问响应式变量的值
+    }, doneTypingInterval);
 }
 
 
