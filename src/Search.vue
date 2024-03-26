@@ -61,6 +61,8 @@ function highlightHitResult(value: string) {
 */
 
     // 上面的换成下面这个：
+
+    /*
     // 首先，选取所有符合条件的元素
     const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
 
@@ -77,6 +79,42 @@ function highlightHitResult(value: string) {
         }
     });
     // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点
+*/
+
+    // 首先，选取所有符合条件的元素
+    const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
+
+    // 准备一个数组来保存所有文本节点
+    const allTextNodes = [];
+
+    // 定义一个辅助函数，用于检查一个元素是否是另一个元素的后代
+    function isDescendant(parent, child) {
+        let node = child.parentNode;
+        while (node != null) {
+            if (node == parent) {
+                return true;
+            }
+            node = node.parentNode;
+        }
+        return false;
+    }
+
+    // 对每个符合条件的元素，首先检查它是否是已选元素的后代，如果不是，则使用 createTreeWalker 遍历其文本节点
+    elements.forEach(element => {
+        // 检查当前元素是否是任何其他已选元素的后代
+        const isNested = Array.from(elements).some(otherElement => otherElement !== element && isDescendant(otherElement, element));
+        
+        // 如果当前元素不是其他元素的后代，则遍历其文本节点
+        if (!isNested) {
+            const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+            let currentNode = treeWalker.nextNode();
+            while (currentNode) {
+                allTextNodes.push(currentNode);
+                currentNode = treeWalker.nextNode();
+            }
+        }
+    });
+    // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点，且避免了重复计数
 
 
 
