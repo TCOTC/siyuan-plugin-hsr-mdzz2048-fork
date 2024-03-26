@@ -93,6 +93,7 @@ function highlightHitResult(value: string) {
     const str = value.trim().toLowerCase()
     if (!str) return
     
+/*
     // 查找所有文本节点是否包含搜索词
     const ranges = allTextNodes
         .map((el) => {
@@ -116,7 +117,30 @@ function highlightHitResult(value: string) {
                 return range
             })
         })
-    
+*/
+// 替换为：
+    // 查找所有文本节点是否包含搜索词，并创建对应的 Range 对象
+    let ranges = [];
+    allTextNodes.forEach((node) => {
+        const textContent = node.textContent.toLowerCase();
+        let startIndex = 0;
+        while ((startIndex = textContent.indexOf(str, startIndex)) !== -1) {
+            const range = document.createRange();
+            try {
+                range.setStart(node, startIndex);
+                range.setEnd(node, startIndex + str.length);
+                ranges.push(range);
+            } catch (error) {
+                console.error("Error setting range in node:", node, error);
+            }
+            startIndex += str.length;
+        }
+    });
+
+
+
+
+
     // 创建高亮对象
     const searchResultsHighlight = new Highlight(...ranges.flat())
     resultCount.value = ranges.flat().length
