@@ -49,37 +49,6 @@ function highlightHitResult(value: string) {
     // 自动重置搜索结果索引计数为 0
     resultIndex.value = 0
 
-/*
-    // 创建 createTreeWalker 迭代器，用于遍历文本节点，保存到一个数组
-    const treeWalker = document.createTreeWalker(props.document, NodeFilter.SHOW_TEXT)
-    const allTextNodes: Node[] = []
-    let currentNode = treeWalker.nextNode()
-    while (currentNode) {
-        allTextNodes.push(currentNode)
-        currentNode = treeWalker.nextNode()
-    }
-*/
-
-    // 上面的换成下面这个：
-
-    /*
-    // 首先，选取所有符合条件的元素
-    const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
-
-    // 准备一个数组来保存所有文本节点
-    const allTextNodes = [];
-
-    // 对每个符合条件的元素，使用 createTreeWalker 遍历其文本节点
-    elements.forEach(element => {
-        const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-        let currentNode = treeWalker.nextNode();
-        while (currentNode) {
-            allTextNodes.push(currentNode);
-            currentNode = treeWalker.nextNode();
-        }
-    });
-    // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点
-*/
 
     // 首先，选取所有符合条件的元素
     const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
@@ -117,14 +86,6 @@ function highlightHitResult(value: string) {
     // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点，且避免了重复计数
 
 
-
-
-    // todo: 过滤非内容块节点
-    // console.log(allTextNodes)
-    // allTextNodes.map(node => {
-        
-    // })
-    
     // 清除上个高亮
     CSS.highlights.clear()
     
