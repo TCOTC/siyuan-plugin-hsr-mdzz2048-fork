@@ -142,6 +142,9 @@ function clickLast() {
     if (resultIndex.value > 1) {
         resultIndex.value = resultIndex.value - 1
     }
+    else if (resultIndex.value < 1) {
+        resultIndex.value = resultCount.value
+    }
     scroollIntoRanges(resultIndex.value -1)
 }
 function clickNext() {
