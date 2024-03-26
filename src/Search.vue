@@ -43,10 +43,9 @@ const props = defineProps<{
     element: Element,
 }>()
 
-// 当文本框内容变动后超过2秒没有再次变动时，会触发 highlightHitResult 函数
-// const searchText = ref(''); // v-model 绑定的变量
+// 当文本框内容变动后超过1秒没有再次变动时，会触发 highlightHitResult 函数
 let typingTimer: number | undefined; // 更新这里，初始化为 undefined
-const doneTypingInterval = 2000; // 2秒
+const doneTypingInterval = 1000; // 1秒
 
 function handleInput() {
     clearTimeout(typingTimer); // 清除之前的定时器
@@ -136,7 +135,7 @@ function highlightHitResult(value: string) {
     const searchResultsHighlight = new Highlight(...ranges.flat())
     resultCount.value = ranges.flat().length
     resultRange.value = ranges.flat()
-    console.log(ranges.flat())
+    // console.log(ranges.flat())
 
     // 注册高亮
     CSS.highlights.set("search-results", searchResultsHighlight)
