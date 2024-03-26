@@ -1,22 +1,22 @@
 {
-  "name": "siyuan-plugin-hsr",
-  "author": "mdzz2048",
-  "url": "https://github.com/mdzz2048/siyuan-plugin-hsr",
-  "version": "0.0.2",
+  "name": "siyuan-plugin-hsr-mdzz2048-fork",
+  "author": "TCOTC",
+  "url": "https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork",
+  "version": "0.0.3",
   "minAppVersion": "2.9.8",
   "backends": ["windows", "linux", "darwin"],
-  "frontends": ["desktop"],
+  "frontends": ["desktop", "browser-desktop"],
   "displayName": {
-    "en_US": "siyuan-weread-hsr",
-    "zh_CN": "高亮搜索结果"
+    "default": "Highlight search results",
+    "zh_CN": "高亮搜索结果Ⅱ"
   },
   "description": {
-    "en_US": "Search in the current document and highlight the search results",
+    "default": "Search in the current document and highlight the search results",
     "zh_CN": "在当前文档搜索，并高亮搜索结果"
   },
   "readme": {
-    "en_US": "README_en_US.md",
-    "zh_CN": "README.md"
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
   },
   "funding": {
     "openCollective": "",
@@ -26,6 +26,9 @@
   },
   "keywords": [
     "高亮",
-    "搜索"
+    "搜索",
+    "Ctrl+F",
+    "highlight",
+    "search"
   ]
 }

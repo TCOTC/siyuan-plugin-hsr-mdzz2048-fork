@@ -1,9 +1,12 @@
 .highlight-search-result {
     position: absolute;
-    top: 135px;
-    right: 10px;
+    top: 60px;
+    right: 30px;
 }
-
+.highlight-search-result .search-dialog {
+    position: relative;
+    z-index: 5;
+}
 ::highlight(search-results) {
     background-color: rgb(235 235 5);
     color: black;

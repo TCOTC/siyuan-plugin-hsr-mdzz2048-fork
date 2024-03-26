@@ -106,7 +106,7 @@ function scroollIntoRanges(index: number) {
     const ranges = resultRange.value as Range[]
     const range = ranges[index]
     const parent = range.commonAncestorContainer.parentElement
-    parent.scrollIntoView({ behavior: 'smooth' })
+    parent.scrollIntoView({ behavior: 'smooth', inline: "center" })
 
     CSS.highlights.set("search-focus", new Highlight(range))
 }
