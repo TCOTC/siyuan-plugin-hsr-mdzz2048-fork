@@ -99,32 +99,7 @@ function highlightHitResult(value: string) {
     const str = value.trim().toLowerCase()
     if (!str) return
     
-/*
-    // 查找所有文本节点是否包含搜索词
-    const ranges = allTextNodes
-        .map((el) => {
-            return { el, text: el.textContent.toLowerCase() }
-        })
-        .map(({ el, text }) => {
-            const indices = []
-            let startPos = 0
-            while (startPos < text.length) {
-                const index = text.indexOf(str, startPos)
-                if (index === -1) break
-                indices.push(index)
-                startPos = index + str.length
-            }
-    
-            // 根据搜索词的位置创建选区
-            return indices.map((index) => {
-                const range = new Range()
-                range.setStart(el, index)
-                range.setEnd(el, index + str.length)
-                return range
-            })
-        })
-*/
-// 替换为：
+
     // 查找所有文本节点是否包含搜索词，并创建对应的 Range 对象
     let ranges = [];
     allTextNodes.forEach((node) => {
@@ -142,10 +117,6 @@ function highlightHitResult(value: string) {
             startIndex += str.length;
         }
     });
-
-
-
-
 
     // 创建高亮对象
     const searchResultsHighlight = new Highlight(...ranges.flat())
@@ -174,17 +145,20 @@ function clickLast() {
     else if (resultIndex.value <= 1) {
         resultIndex.value = resultCount.value
     }
+    else if (resultCount.value == 0) {
+        return;
+    }
     scroollIntoRanges(resultIndex.value -1)
 }
 function clickNext() {
     if (resultIndex.value < resultCount.value) {
         resultIndex.value = resultIndex.value + 1
     }
-    else if (resultIndex.value >= resultCount.value || resultCount.value != 0) {
+    else if (resultIndex.value >= resultCount.value && resultCount.value != 0) {
         resultIndex.value = 1
     }
-    else if (resultCount.value = 0) {
-        resultIndex.value = 0
+    else if (resultCount.value == 0) {
+        return;
     }
     scroollIntoRanges(resultIndex.value -1)
 }
