@@ -174,8 +174,11 @@ function clickNext() {
     if (resultIndex.value < resultCount.value) {
         resultIndex.value = resultIndex.value + 1
     }
-    else if (resultIndex.value >= resultCount.value) {
+    else if (resultIndex.value >= resultCount.value || resultCount.value != 0) {
         resultIndex.value = 1
+    }
+    else if (resultCount.value = 0) {
+        resultIndex.value = 0
     }
     scroollIntoRanges(resultIndex.value -1)
 }
