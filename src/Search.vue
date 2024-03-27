@@ -57,23 +57,23 @@ function handleInput() {
 
 
 // 监控页签元素变动，切换文档时再次搜索
-(function() {
-  const targetNode = document.querySelector('.fn__flex.layout-tab-bar');
+// (function() {
+//   const targetNode = document.querySelector('.fn__flex.layout-tab-bar');
 
-  const observer = new MutationObserver((mutationsList) => {
-    for (let mutation of mutationsList) {
-      if (mutation.type === 'attributes' || mutation.type === 'childList') {
-        // 当类名或列表变动时执行函数
-        highlightHitResult(searchText.value, true);
-      }
-    }
-  });
+//   const observer = new MutationObserver((mutationsList) => {
+//     for (let mutation of mutationsList) {
+//       if (mutation.type === 'attributes' || mutation.type === 'childList') {
+//         // 当类名或列表变动时执行函数
+//         highlightHitResult(searchText.value, true);
+//       }
+//     }
+//   });
 
-  const config = { attributes: true, childList: true, subtree: true };
+//   const config = { attributes: true, childList: true, subtree: true };
 
-  observer.observe(targetNode, config);
+//   observer.observe(targetNode, config);
 
-})();
+// })();
 
 
 
@@ -88,7 +88,7 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     }
 
     // 首先，选取所有符合条件的元素
-    const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
+    const elements = document.querySelectorAll('div:not(.fn__none).protyle-wysiwyg [data-node-id]');
 
     // 准备一个数组来保存所有文本节点
     const allTextNodes = [];
