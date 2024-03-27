@@ -6,6 +6,20 @@ import "./index.scss"
 
 const CLASS_NAME = "highlight-search-result"
 
+const SearchComponent = {
+    setup() {
+        onMounted(() => {
+            const inputElement = document.querySelector('.highlight-search-result .search-dialog .b3-text-field');
+            if (inputElement) {
+                inputElement.focus();
+                inputElement.select();
+            }
+        });
+
+        return {};
+    }
+};
+
 export default class PluginHighlight extends Plugin {
 
     onload() {
@@ -57,15 +71,7 @@ export default class PluginHighlight extends Plugin {
                 createApp(SearchVue, {
                     document: edit,
                     element: element,
-                }).mount(element);
-            } else {
-                const inputElement = existingElement.querySelector('.highlight-search-result .search-dialog .b3-text-field');
-                if (inputElement) {
-                    onMounted(() => {
-                        inputElement.focus();
-                        inputElement.select();
-                    });
-                }
+                }).component('search-component', SearchComponent).mount(element);
             }
         });
     }
