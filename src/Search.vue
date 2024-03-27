@@ -89,30 +89,30 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     // return style.display !== 'none' && style.visibility !== 'hidden';
     // }
 // 上面这个不行，改成下面这个试试：
-    function isElementVisible(element) {
-    // 检查元素本身的可见性
-    function checkVisibility(elm) {
-        const style = window.getComputedStyle(elm);
-        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-    }
+//     function isElementVisible(element) {
+//     // 检查元素本身的可见性
+//     function checkVisibility(elm) {
+//         const style = window.getComputedStyle(elm);
+//         return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+//     }
 
-    // 递归检查元素及其父元素
-    function checkElementAndParents(elm) {
-        if (!elm || elm === document.body) {
-            // 到达document.body，结束递归
-            return true;
-        }
-        if (!checkVisibility(elm)) {
-            // 如果元素本身不可见，返回false
-            return false;
-        }
-        // 递归检查父元素
-        return checkElementAndParents(elm.parentNode);
-    }
+//     // 递归检查元素及其父元素
+//     function checkElementAndParents(elm) {
+//         if (!elm || elm === document.body) {
+//             // 到达document.body，结束递归
+//             return true;
+//         }
+//         if (!checkVisibility(elm)) {
+//             // 如果元素本身不可见，返回false
+//             return false;
+//         }
+//         // 递归检查父元素
+//         return checkElementAndParents(elm.parentNode);
+//     }
 
-    return checkElementAndParents(element);
-}
-//
+//     return checkElementAndParents(element);
+// }
+//也不行，干脆直接不用了
 
 
     // 对每个符合条件的元素，首先检查它是否是已选元素的后代，如果不是，则使用 createTreeWalker 遍历其文本节点
