@@ -16,6 +16,12 @@
     height: 10.5px;
     width: 10.5px;
 }
+
+.highlighted {
+    // background-color: yellow; /* 背景高亮颜色 */
+    color: black; /* 文本颜色为黑色 */
+}
+
 ::highlight(search-results) {
     background-color: rgb(235 235 5);
     color: rgba(0, 0, 0, 0.3);
