@@ -1,5 +1,6 @@
 import { Plugin, getFrontend, getBackend } from "siyuan";
 import { createApp } from "vue";
+import { onMounted } from 'vue';
 import SearchVue from "./Search.vue";
 import "./index.scss"
 
@@ -85,6 +86,14 @@ export default class PluginHighlight extends Plugin {
                     document: edit,
                     element: element,
                 }).mount(element);
+            } else {
+                const inputElement = existingElement.querySelector('.highlight-search-result .search-dialog .b3-text-field');
+                if (inputElement) {
+                    onMounted(() => {
+                        inputElement.focus();
+                        inputElement.select();
+                    });
+                }
             }
         });
     }
