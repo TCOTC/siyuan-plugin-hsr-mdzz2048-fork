@@ -34,3 +34,4 @@
 ##### 2024-03-27
 
 - 每次点击箭头时重新搜索 [#1](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/1)
+- 不再搜索到其他页签中的内容 [#3](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/3)
