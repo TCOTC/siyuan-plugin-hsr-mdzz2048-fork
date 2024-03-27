@@ -7,7 +7,6 @@
                 class="b3-text-field b3-form__icon-input fn__size200"
                 :placeholder="placeholder"
                 v-model="searchText"
-                @change="highlightHitResult(searchText, true)"
                 @keyup.enter="highlightHitResult(searchText, true)"
                 @input="handleInput"
             />
@@ -30,7 +29,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Svg from "./Svg.vue"
-// import { showToolTip } from "./utils/showtips";
 
 const searchText = ref("")
 const resultCount = ref(0)
@@ -53,66 +51,6 @@ function handleInput() {
         highlightHitResult(searchText.value, true); // 使用 .value 访问响应式变量的值
     }, doneTypingInterval);
 }
-
-
-
-// 监控当前页签，切换页签时重新搜索
-// let previousDataId = null;
-
-// function extractDataIds() {
-//     const tabContainer = this.$refs.tabContainer;
-//     const elements = tabContainer.querySelectorAll('.layout-tab-container > div:not(.fn__none)');
-    
-//     let currentDataId = '';
-//     elements.forEach(element => {
-//         currentDataId = element.getAttribute('data-id');
-//         console.log(currentDataId);
-//     });
-
-//     if (previousDataId !== null && previousDataId !== currentDataId) {
-//         highlightHitResult(searchText.value, true);
-//     }
-    
-//     previousDataId = currentDataId;
-// }
-
-// setInterval(() => {
-//     extractDataIds();
-// }, 4000);
-
-// 上面的无效，换下面的：
-mounted() {
-    setInterval(() => {
-        this.extractDataIds();
-    }, 4000);
-},
-methods: {
-    extractDataIds() {
-        const tabContainer = this.$refs.tabContainer;
-        if (tabContainer) {
-            const elements = tabContainer.querySelectorAll('.layout-tab-container > div:not(.fn__none)');
-            
-            let currentDataId = '';
-            elements.forEach(element => {
-                currentDataId = element.getAttribute('data-id');
-                console.log(currentDataId);
-            });
-
-            if (this.previousDataId !== null && this.previousDataId !== currentDataId) {
-                this.highlightHitResult();
-            }
-            
-            this.previousDataId = currentDataId;
-        }
-    },
-    highlightHitResult(searchText.value, true);
-},
-data() {
-    return {
-        previousDataId: null
-    };
-}
-
 
 
 // REF: https://juejin.cn/post/7199438741533376573
