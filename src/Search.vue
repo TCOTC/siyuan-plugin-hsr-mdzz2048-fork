@@ -14,14 +14,14 @@
         </div>
         {{ resultIndex + "/" + resultCount }}
         <div class="search-tools">
-            <div @click="clickLast">
+            <div @click="clickLast" :class="{ 'clicked': buttonClicked === 'last' }>
                 <Svg icon="#iconUp" class="icon--14_14"></Svg>
             </div>
-            <div @click="clickNext">
+            <div @click="clickNext" :class="{ 'clicked': buttonClicked === 'next' }">
                 <Svg icon="#iconDown" class="icon--14_14"></Svg>
             </div>
-            <div @click="clickClose">
-                <Svg icon="#iconClose" class="icon--14_14" id="search-tools-close"></Svg>
+            <div @click="clickClose" :class="{ 'clicked': buttonClicked === 'close' }>
+                <Svg icon="#iconClose" class="icon--14_14" data-id="search-tools-close"></Svg>
             </div>
         </div>
     </div>
