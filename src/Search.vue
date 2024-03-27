@@ -112,7 +112,7 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
 
 
     // 清除上个高亮
-    removeHighlight();
+    CSS.highlights.clear()
     
     // 为空判断
     const str = value.trim().toLowerCase()
@@ -142,11 +142,6 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     resultCount.value = ranges.flat().length
     resultRange.value = ranges.flat()
     // console.log(ranges.flat())
-
-    // 为高亮区域添加类名
-    ranges.flat().forEach(range => {
-        range.parentElement.classList.add("highlighted");
-    });
 
     // 注册高亮
     CSS.highlights.set("search-results", searchResultsHighlight)
@@ -191,17 +186,7 @@ function clickNext() { // 下一个
 function clickClose() { // 关闭
     props.element.remove()
     // 清除高亮
-    removeHighlight();
-}
-// 移除高亮
-function removeHighlight() {
-    // 清除高亮区域的类名
-    ranges.flat().forEach(range => {
-        range.parentElement.classList.remove("highlighted");
-    });
-    // 清除高亮
     CSS.highlights.clear()
-}
 }
 </script>
 
