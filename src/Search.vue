@@ -55,28 +55,6 @@ function handleInput() {
 }
 
 
-
-// 监控页签元素变动，切换文档时再次搜索
-// (function() {
-//   const targetNode = document.querySelector('.fn__flex.layout-tab-bar');
-
-//   const observer = new MutationObserver((mutationsList) => {
-//     for (let mutation of mutationsList) {
-//       if (mutation.type === 'attributes' || mutation.type === 'childList') {
-//         // 当类名或列表变动时执行函数
-//         highlightHitResult(searchText.value, true);
-//       }
-//     }
-//   });
-
-//   const config = { attributes: true, childList: true, subtree: true };
-
-//   observer.observe(targetNode, config);
-
-// })();
-
-
-
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
@@ -104,37 +82,6 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
         }
         return false;
     }
-
-    // // 判断元素是否可见
-    // function isElementVisible(element) {
-    // const style = window.getComputedStyle(element);
-    // return style.display !== 'none' && style.visibility !== 'hidden';
-    // }
-// 上面这个不行，改成下面这个试试：
-//     function isElementVisible(element) {
-//     // 检查元素本身的可见性
-//     function checkVisibility(elm) {
-//         const style = window.getComputedStyle(elm);
-//         return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-//     }
-
-//     // 递归检查元素及其父元素
-//     function checkElementAndParents(elm) {
-//         if (!elm || elm === document.body) {
-//             // 到达document.body，结束递归
-//             return true;
-//         }
-//         if (!checkVisibility(elm)) {
-//             // 如果元素本身不可见，返回false
-//             return false;
-//         }
-//         // 递归检查父元素
-//         return checkElementAndParents(elm.parentNode);
-//     }
-
-//     return checkElementAndParents(element);
-// }
-//也不行，干脆直接不用了
 
 
     // 对每个符合条件的元素，首先检查它是否是已选元素的后代，如果不是，则使用 createTreeWalker 遍历其文本节点
