@@ -55,6 +55,34 @@ function handleInput() {
 }
 
 
+
+// 监控当前页签，切换页签时重新搜索
+let previousDataId = null;
+
+function extractDataIds() {
+    const tabContainer = this.$refs.tabContainer;
+    const elements = tabContainer.querySelectorAll('.layout-tab-container > div:not(.fn__none)');
+    
+    let currentDataId = '';
+    elements.forEach(element => {
+        currentDataId = element.getAttribute('data-id');
+        console.log(currentDataId);
+    });
+
+    if (previousDataId !== null && previousDataId !== currentDataId) {
+        highlightHitResult(searchText.value, true);
+    }
+    
+    previousDataId = currentDataId;
+}
+
+setInterval(() => {
+    extractDataIds();
+}, 4000);
+
+
+
+
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
