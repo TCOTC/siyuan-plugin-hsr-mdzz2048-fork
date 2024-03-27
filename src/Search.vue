@@ -187,7 +187,7 @@ function clickClose() { // 关闭
     margin-top: 5px;
 }
 .search-input {
-margin-right: 10px;
+margin-right: 5px;
 }
 .search-tools {
     display: flex;

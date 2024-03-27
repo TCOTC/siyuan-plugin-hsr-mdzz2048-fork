@@ -6,6 +6,11 @@
 .highlight-search-result .search-dialog {
     position: relative;
     z-index: 6;
+    background-color: white;
+    border: 1px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px;
 }
 .highlight-search-result .search-dialog .search-tools div svg[data-id="search-tools-close"] {
     height: 10.5px;
@@ -13,10 +18,10 @@
 }
 ::highlight(search-results) {
     background-color: rgb(235 235 5);
-    color: black;
+    color: rgba(0, 0, 0, 0.3);
 }
 
 ::highlight(search-focus) {
     background-color: rgb(255, 150, 50);
-    color: black;
+    color: rgba(0, 0, 0, 0.3);
 }
