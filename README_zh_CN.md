@@ -35,3 +35,5 @@
 
 - 每次点击箭头时重新搜索 [#1](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/1)
 - 不再搜索到其他打开过的页签中的内容 [#3](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/3)
+- 点击顶栏按钮或使用快捷键时不重复创建元素 [#5](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/5)
+- 调整元素样式
