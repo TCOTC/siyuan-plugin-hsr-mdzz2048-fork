@@ -8,17 +8,21 @@ const CLASS_NAME = "highlight-search-result"
 
 const SearchComponent = {
     setup() {
-        onMounted(() => {
-            const inputElement = document.querySelector('.highlight-search-result .search-dialog .b3-text-field');
-            if (inputElement) {
-                inputElement.focus();
-                inputElement.select();
-            }
-        });
-
-        return {};
+      onMounted(() => {
+        const rootElement = document.querySelector(`.${CLASS_NAME}`);
+        if (rootElement) {
+          const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
+          if (inputElement) {
+            setTimeout(() => { // 等待一小段时间确保元素加载完全
+              inputElement.focus();
+              inputElement.select();
+            }, 100);
+          }
+        }
+      });
+      return {};
     }
-};
+  };
 
 export default class PluginHighlight extends Plugin {
 
