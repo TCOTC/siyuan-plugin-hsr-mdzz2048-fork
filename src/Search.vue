@@ -64,7 +64,7 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     }
 
     // 首先，选取所有符合条件的元素
-    const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id] :not(.av__header span.block__icon)');
+    const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
 
     // 准备一个数组来保存所有文本节点
     const allTextNodes = [];
