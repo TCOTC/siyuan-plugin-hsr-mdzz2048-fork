@@ -184,7 +184,7 @@ function clickLast() { // 上一个
     if (resultIndex.value > 1) {
         resultIndex.value = resultIndex.value - 1
     }
-    else if (resultIndex.value <= 1 && resultCount.value != 0) {
+    else if ((resultIndex.value <= 1 || resultIndex.value > resultCount.value) && resultCount.value != 0) {
         resultIndex.value = resultCount.value
     }
     else if (resultCount.value == 0) {
