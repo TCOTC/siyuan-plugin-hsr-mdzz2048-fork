@@ -41,6 +41,15 @@ const props = defineProps<{
     element: Element,
 }>()
 
+// 设置焦点到输入框，并全选内容
+onMounted(() => {
+  const inputElement = document.querySelector('.highlight-search-result .search-dialog .b3-text-field');
+  if (inputElement) {
+    inputElement.focus();
+    inputElement.select();
+  }
+});
+
 // 当文本框内容变动后超过0.6秒没有再次变动时，会触发 highlightHitResult 函数
 let typingTimer: number | undefined; // 更新这里，初始化为 undefined
 const doneTypingInterval = 600; // 0.6秒
