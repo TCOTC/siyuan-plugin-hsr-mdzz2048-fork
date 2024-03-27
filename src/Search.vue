@@ -43,9 +43,9 @@ const props = defineProps<{
     element: Element,
 }>()
 
-// 当文本框内容变动后超过1秒没有再次变动时，会触发 highlightHitResult 函数
+// 当文本框内容变动后超过0.6秒没有再次变动时，会触发 highlightHitResult 函数
 let typingTimer: number | undefined; // 更新这里，初始化为 undefined
-const doneTypingInterval = 1000; // 1秒
+const doneTypingInterval = 600; // 0.6秒
 
 function handleInput() {
     clearTimeout(typingTimer); // 清除之前的定时器
@@ -88,7 +88,7 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     }
 
     // 首先，选取所有符合条件的元素
-    const elements = document.querySelectorAll('div:not(.fn__none).protyle-wysiwyg [data-node-id]');
+    const elements = document.querySelectorAll('div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
 
     // 准备一个数组来保存所有文本节点
     const allTextNodes = [];
