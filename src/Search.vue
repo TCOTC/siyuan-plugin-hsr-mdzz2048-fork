@@ -57,29 +57,61 @@ function handleInput() {
 
 
 // 监控当前页签，切换页签时重新搜索
-let previousDataId = null;
+// let previousDataId = null;
 
-function extractDataIds() {
-    const tabContainer = this.$refs.tabContainer;
-    const elements = tabContainer.querySelectorAll('.layout-tab-container > div:not(.fn__none)');
+// function extractDataIds() {
+//     const tabContainer = this.$refs.tabContainer;
+//     const elements = tabContainer.querySelectorAll('.layout-tab-container > div:not(.fn__none)');
     
-    let currentDataId = '';
-    elements.forEach(element => {
-        currentDataId = element.getAttribute('data-id');
-        console.log(currentDataId);
-    });
+//     let currentDataId = '';
+//     elements.forEach(element => {
+//         currentDataId = element.getAttribute('data-id');
+//         console.log(currentDataId);
+//     });
 
-    if (previousDataId !== null && previousDataId !== currentDataId) {
-        highlightHitResult(searchText.value, true);
-    }
+//     if (previousDataId !== null && previousDataId !== currentDataId) {
+//         highlightHitResult(searchText.value, true);
+//     }
     
-    previousDataId = currentDataId;
+//     previousDataId = currentDataId;
+// }
+
+// setInterval(() => {
+//     extractDataIds();
+// }, 4000);
+
+// 上面的无效，换下面的：
+mounted() {
+    setInterval(() => {
+        this.extractDataIds();
+    }, 4000);
+},
+methods: {
+    extractDataIds() {
+        const tabContainer = this.$refs.tabContainer;
+        if (tabContainer) {
+            const elements = tabContainer.querySelectorAll('.layout-tab-container > div:not(.fn__none)');
+            
+            let currentDataId = '';
+            elements.forEach(element => {
+                currentDataId = element.getAttribute('data-id');
+                console.log(currentDataId);
+            });
+
+            if (this.previousDataId !== null && this.previousDataId !== currentDataId) {
+                this.highlightHitResult();
+            }
+            
+            this.previousDataId = currentDataId;
+        }
+    },
+    highlightHitResult(searchText.value, true);
+},
+data() {
+    return {
+        previousDataId: null
+    };
 }
-
-setInterval(() => {
-    extractDataIds();
-}, 4000);
-
 
 
 
