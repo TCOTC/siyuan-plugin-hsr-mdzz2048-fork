@@ -121,7 +121,8 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
         const isNested = Array.from(elements).some(otherElement => otherElement !== element && isDescendant(otherElement, element));
         
         // 如果当前元素不是其他元素的后代，则遍历其文本节点
-        if (!isNested && isElementVisible(element)) { // 判断元素是否可见
+        // if (!isNested && isElementVisible(element)) { // 判断元素是否可见
+        if (!isNested) {
             const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
             let currentNode = treeWalker.nextNode();
             while (currentNode) {
