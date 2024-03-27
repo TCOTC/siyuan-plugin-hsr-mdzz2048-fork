@@ -7,7 +7,8 @@
                 class="b3-text-field b3-form__icon-input fn__size200"
                 :placeholder="placeholder"
                 v-model="searchText"
-                @keyup.enter="highlightHitResult(searchText, true)"
+                @keyup.enter=clickNext()
+                @keyup.shift.enter=clickLast()
                 @input="handleInput"
             />
         </div>
