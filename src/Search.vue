@@ -52,9 +52,9 @@ onMounted(() => {
   }
 });
 
-// 当文本框内容变动后超过0.6秒没有再次变动时，会触发 highlightHitResult 函数
+// 当文本框内容变动后超过0.4秒没有再次变动时，会触发 highlightHitResult 函数
 let typingTimer: number | undefined; // 更新这里，初始化为 undefined
-const doneTypingInterval = 600; // 0.6秒
+const doneTypingInterval = 400; // 0.4秒
 
 function handleInput() {
     clearTimeout(typingTimer); // 清除之前的定时器
