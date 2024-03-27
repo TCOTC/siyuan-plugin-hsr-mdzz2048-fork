@@ -213,4 +213,8 @@ margin-right: 5px;
     height: 14px;
     margin: 5px;
 }
+.clicked {
+    background-color: #f0f0f0; /* Change the background color when clicked */
+    transition: background-color 0.2s; /* Add a smooth transition effect */
+}
 </style>
