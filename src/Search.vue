@@ -7,8 +7,8 @@
                 class="b3-text-field b3-form__icon-input fn__size200"
                 :placeholder="placeholder"
                 v-model="searchText"
-                @change="highlightHitResult(searchText)"
-                @keyup.enter="highlightHitResult(searchText)"
+                @change="highlightHitResult(searchText, true)"
+                @keyup.enter="highlightHitResult(searchText, true)"
                 @input="handleInput"
             />
         </div>
@@ -50,7 +50,7 @@ const doneTypingInterval = 1000; // 1秒
 function handleInput() {
     clearTimeout(typingTimer); // 清除之前的定时器
     typingTimer = window.setTimeout(() => { // 使用 window.setTimeout 并更新这里
-        highlightHitResult(searchText.value); // 使用 .value 访问响应式变量的值
+        highlightHitResult(searchText.value, true); // 使用 .value 访问响应式变量的值
     }, doneTypingInterval);
 }
 
@@ -58,10 +58,12 @@ function handleInput() {
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
-function highlightHitResult(value: string) {
-    // 自动重置搜索结果索引计数为 0
-    resultIndex.value = 0
-
+function highlightHitResult(value: string, change: boolean) { // 搜索并高亮结果
+    
+    // 如果文本框内容改变，自动重置搜索结果索引计数为 0
+    if (change == true) {
+        resultIndex.value = 0
+    }
 
     // 首先，选取所有符合条件的元素
     const elements = document.querySelectorAll('.protyle-wysiwyg [data-node-id]');
@@ -151,7 +153,8 @@ function scroollIntoRanges(index: number) {
 
     CSS.highlights.set("search-focus", new Highlight(range))
 }
-function clickLast() {
+function clickLast() { // 上一个
+    highlightHitResult(searchText.value, false)
     if (resultIndex.value > 1) {
         resultIndex.value = resultIndex.value - 1
     }
@@ -163,7 +166,8 @@ function clickLast() {
     }
     scroollIntoRanges(resultIndex.value -1)
 }
-function clickNext() {
+function clickNext() { // 下一个
+    highlightHitResult(searchText.value, false)
     if (resultIndex.value < resultCount.value) {
         resultIndex.value = resultIndex.value + 1
     }
@@ -175,7 +179,7 @@ function clickNext() {
     }
     scroollIntoRanges(resultIndex.value -1)
 }
-function clickClose() {
+function clickClose() { // 关闭
     props.element.remove()
     // 清除高亮
     CSS.highlights.clear()
