@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-hsr-mdzz2048-fork",
   "author": "TCOTC",
   "url": "https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "minAppVersion": "2.9.8",
   "backends": ["windows", "linux", "darwin"],
   "frontends": ["desktop", "browser-desktop"],
