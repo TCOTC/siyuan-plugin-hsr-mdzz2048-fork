@@ -64,18 +64,6 @@ function handleInput() {
 }
 
 
-// 切换页签时重新搜索
-// 监听名为 "switch-protyle" 的事件
-mounted() {
-    this.$root.$on('switch-protyle', this.handleSwitchProtyle);
-},
-methods: {
-    handleSwitchProtyle() {
-        highlightHitResult(searchText.value, true)
-    }
-}
-
-
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
