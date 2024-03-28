@@ -28,8 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from "vue";
+import { defineProps } from 'vue';
 import Svg from "./Svg.vue"
 
 const searchText = ref("")
@@ -45,11 +45,22 @@ const props = defineProps<{
 
 // 设置焦点到输入框，并全选内容
 onMounted(() => {
-  const inputElement = document.querySelector('.highlight-search-result .search-dialog .b3-text-field');
-  if (inputElement) {
-    inputElement.focus();
-    inputElement.select();
-  }
+    // 切换页签时重新搜索
+    const switchProtyleHandler = () => {
+        highlightHitResult(searchText.value, true);
+    };
+
+    document.addEventListener("switch-protyle", switchProtyleHandler);
+
+    const inputElement = document.querySelector('.highlight-search-result .search-dialog .b3-text-field');
+    if (inputElement) {
+        inputElement.focus();
+        inputElement.select();
+    }
+});
+
+onUnmounted(() => {
+    document.removeEventListener("switch-protyle", switchProtyleHandler);
 });
 
 // 当文本框内容变动后超过0.4秒没有再次变动时，会触发 highlightHitResult 函数
@@ -62,29 +73,6 @@ function handleInput() {
         highlightHitResult(searchText.value, true); // 使用 .value 访问响应式变量的值
     }, doneTypingInterval);
 }
-
-
-// 切换页签时重新搜索
-const MyComponent = {
-  mounted() {
-    this.handleSwitchProtyle = () => {
-      highlightHitResult(this.searchText.value, true);
-    };
-
-    // 监听名为 "switch-protyle" 的事件
-    document.addEventListener('switch-protyle', this.handleSwitchProtyle);
-  },
-  beforeDestroy() {
-    // 在组件销毁前移除事件监听器
-    document.removeEventListener('switch-protyle', this.handleSwitchProtyle);
-  },
-  methods: {
-    highlightHitResult(searchText.value, true)
-  }
-};
-// 注册组件
-Vue.component('my-component', MyComponent);
-
 
 
 // REF: https://juejin.cn/post/7199438741533376573
