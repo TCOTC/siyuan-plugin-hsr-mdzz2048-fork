@@ -65,15 +65,26 @@ function handleInput() {
 
 
 // 切换页签时重新搜索
-// 监听名为 "switch-protyle" 的事件
-mounted() {
-    this.$root.$on('switch-protyle', this.handleSwitchProtyle);
-},
-methods: {
-    handleSwitchProtyle() {
-        highlightHitResult(searchText.value, true)
-    }
-}
+const MyComponent = {
+  mounted() {
+    this.handleSwitchProtyle = () => {
+      highlightHitResult(this.searchText.value, true);
+    };
+
+    // 监听名为 "switch-protyle" 的事件
+    document.addEventListener('switch-protyle', this.handleSwitchProtyle);
+  },
+  beforeDestroy() {
+    // 在组件销毁前移除事件监听器
+    document.removeEventListener('switch-protyle', this.handleSwitchProtyle);
+  },
+  methods: {
+    highlightHitResult(searchText.value, true)
+  }
+};
+// 注册组件
+Vue.component('my-component', MyComponent);
+
 
 
 // REF: https://juejin.cn/post/7199438741533376573
