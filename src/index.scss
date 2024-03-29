@@ -18,10 +18,10 @@
 }
 ::highlight(search-results) {
     background-color: rgb(235 235 5);
-    color: rgba(0, 0, 0, 0.3);
+    color: rgb(0, 0, 0);
 }
 
 ::highlight(search-focus) {
     background-color: rgb(255, 150, 50);
-    color: rgba(0, 0, 0, 0.3);
+    color: rgb(0, 0, 0);
 }
