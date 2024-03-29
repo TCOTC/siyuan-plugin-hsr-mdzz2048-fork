@@ -154,15 +154,11 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
 function scroollIntoRanges(index: number) {
     const ranges = resultRange.value as Range[]
     const range = ranges[index]
-    const commonAncestor = range.commonAncestorContainer as HTMLElement
-
-    if (commonAncestor instanceof HTMLElement) {
-        commonAncestor.scrollIntoView({ behavior: 'smooth', block: "center" })
-    }
+    const parent = range.commonAncestorContainer.parentElement
+    parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
     CSS.highlights.set("search-focus", new Highlight(range))
 }
-
 function clickLast() { // 上一个
     highlightHitResult(searchText.value, false)
     if ((resultIndex.value > 1 && resultIndex.value <= resultCount.value) && resultCount.value != 0) {
