@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { onMounted } from 'vue';
+import { defineProps } from 'vue';
 import Svg from "./Svg.vue"
 
 const searchText = ref("")
