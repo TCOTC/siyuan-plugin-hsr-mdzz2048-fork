@@ -3,7 +3,7 @@
         <div class="b3-form__icon search-input">
             <input
                 type="text"
-                class="b3-text-field b3-form__icon-input fn__size200"
+                class="b3-text-field fn__size200"
                 :placeholder="placeholder"
                 v-model="searchText"
                 @keydown.enter.exact="clickNext()"
