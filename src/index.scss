@@ -8,7 +8,15 @@
     z-index: 6;
     background-color: white;
     border: 1px solid white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 
+        2px 2px 0 rgba(0, 0, 0, 0.2), /* 左上 */
+        3px 2px 0 rgba(0, 0, 0, 0.2), /* 上 */
+        3px 3px 0 rgba(0, 0, 0, 0.2), /* 右上 */
+        3px 3px 0 rgba(0, 0, 0, 0.2), /* 右 */
+        3px 3px 0 rgba(0, 0, 0, 0.2), /* 右下 */
+        2px 3px 0 rgba(0, 0, 0, 0.2), /* 下 */
+        2px 3px 0 rgba(0, 0, 0, 0.2), /* 左下 */
+        2px 2px 0 rgba(0, 0, 0, 0.2); /* 左 */
     border-radius: 5px;
     padding: 10px;
 }
@@ -19,11 +27,11 @@
     text-align: center;
     cursor: default;
     background-color: white;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:hover {
     background-color: #d3d3d38b;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:active {
     background-color: #909090b1;
