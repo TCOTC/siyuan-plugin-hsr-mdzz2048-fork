@@ -14,13 +14,13 @@
         {{ resultIndex + "/" + resultCount }}
         <div class="search-tools">
             <div @click="clickLast">
-                <Svg icon="#iconUp" class="icon--14_14" id="search-tools-up"></Svg>
+                <Svg icon="#iconUp" class="icon--14_14"></Svg>
             </div>
             <div @click="clickNext">
-                <Svg icon="#iconDown" class="icon--14_14" id="search-tools-down"></Svg>
+                <Svg icon="#iconDown" class="icon--14_14"></Svg>
             </div>
             <div @click="clickClose">
-                <Svg icon="#iconClose" class="icon--14_14" id="search-tools-close"></Svg>
+                <Svg icon="#iconClose" class="icon--14_14"></Svg>
             </div>
         </div>
     </div>
@@ -203,10 +203,10 @@ margin-right: 5px;
 .search-tools {
     display: flex;
     align-items: center;
-    margin-left: 5px;
 }
 .search-tools > div {
     display: flex;
+    margin-left: 5px;
 }
 .icon--14_14 {
     width: 14px;

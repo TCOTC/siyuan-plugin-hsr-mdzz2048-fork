@@ -13,19 +13,19 @@
     padding: 10px;
 }
 
-.highlight-search-result .search-dialog .search-tools div svg[data-id^="search-tools-"] {
+.highlight-search-result .search-dialog .search-tools>div {
     border: none;
     border-radius: 20px;
     text-align: center;
     cursor: default;
 }
-.highlight-search-result .search-dialog .search-tools div svg[data-id^="search-tools-"]:hover {
-    background-color: #d3d3d3b1;
-    transition: background-color 0.3s;
+.highlight-search-result .search-dialog .search-tools>div:hover {
+    background-color: #d3d3d38b;
+    transition: background-color 0.7s;
 }
-.highlight-search-result .search-dialog .search-tools div svg[data-id^="search-tools-"]:active {
+.highlight-search-result .search-dialog .search-tools>div:active {
     background-color: #909090b1;
-    transition: background-color 0.3s;
+    transition: background-color 0.7s;
 }
 
 ::highlight(search-results) {
