@@ -1,7 +1,6 @@
 <template>
     <div class="search-dialog">
         <div class="b3-form__icon search-input">
-            <Svg icon="#iconSearch" class="b3-form__icon-icon"></Svg>
             <input
                 type="text"
                 class="b3-text-field b3-form__icon-input fn__size200"
@@ -15,10 +14,10 @@
         {{ resultIndex + "/" + resultCount }}
         <div class="search-tools">
             <div @click="clickLast">
-                <Svg icon="#iconUp" class="icon--14_14"></Svg>
+                <Svg icon="#iconUp" class="icon--14_14" id="search-tools-up"></Svg>
             </div>
             <div @click="clickNext">
-                <Svg icon="#iconDown" class="icon--14_14"></Svg>
+                <Svg icon="#iconDown" class="icon--14_14" id="search-tools-down"></Svg>
             </div>
             <div @click="clickClose">
                 <Svg icon="#iconClose" class="icon--14_14" id="search-tools-close"></Svg>
@@ -37,7 +36,7 @@ const searchText = ref("")
 const resultCount = ref(0)
 const resultIndex = ref(0)
 const resultRange = ref()
-const placeholder = "Enter"
+const placeholder = "🔍︎Enter"
 
 const props = defineProps<{
     document: Element,

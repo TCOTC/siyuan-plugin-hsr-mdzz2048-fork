@@ -12,6 +12,8 @@
 
 另外还添加了快捷键 `Ctrl+Shift+Alt+F`，可以在快捷键设置自行修改。
 
+只搜索当前页签内的文本，不包含界面和文档标题。
+
 #### 其他信息
 
 [原仓库](https://github.com/mdzz2048/siyuan-plugin-hsr) 作者暂停维护插件，所以我 fork 了一份稍作修改。但仍有部分问题，欢迎 PR。
@@ -42,3 +44,7 @@
 - 不再搜索到其他打开过的页签中的内容 [#3](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/3)
 - 点击顶栏按钮或使用快捷键时不重复创建元素 [#5](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/5)
 - 在输入框内，按下 `Enter` 跳转下一项，按下 `Shift+Enter` 跳转上一项 [#6](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/6)
+
+##### 2024-03-31
+
+- 优化元素样式

@@ -12,10 +12,29 @@
     border-radius: 5px;
     padding: 10px;
 }
+
 .highlight-search-result .search-dialog .search-tools div svg[data-id="search-tools-close"] {
     height: 10.5px;
     width: 10.5px;
 }
+.highlight-search-result .search-dialog .search-tools div svg[data-id^="search-tools-"] {
+    background-color: #4b4b4bb1;
+    border: none;
+    border-radius: 20px;
+    text-align: center;
+    cursor: default;
+    transition: background-color 0.3s;
+}
+
+// .highlight-search-result .search-dialog .search-tools div svg[data-id^="search-tools-"]:hover {
+//     background-color: #4b4b4bb1;
+// }
+
+.highlight-search-result .search-dialog .search-tools div svg[data-id^="search-tools-"]:active {
+    background-color: #2e2e2ebb;
+    transition: background-color 0.3s;
+}
+
 ::highlight(search-results) {
     background-color: rgb(235 235 5);
     color: rgb(0, 0, 0);
