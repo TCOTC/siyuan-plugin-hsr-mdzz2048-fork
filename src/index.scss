@@ -8,15 +8,7 @@
     z-index: 6;
     background-color: white;
     border: 1px solid white;
-    box-shadow: 
-        2px 2px 0 rgba(0, 0, 0, 0.2), /* 左上 */
-        3px 2px 0 rgba(0, 0, 0, 0.2), /* 上 */
-        3px 3px 0 rgba(0, 0, 0, 0.2), /* 右上 */
-        3px 3px 0 rgba(0, 0, 0, 0.2), /* 右 */
-        3px 3px 0 rgba(0, 0, 0, 0.2), /* 右下 */
-        2px 3px 0 rgba(0, 0, 0, 0.2), /* 下 */
-        2px 3px 0 rgba(0, 0, 0, 0.2), /* 左下 */
-        2px 2px 0 rgba(0, 0, 0, 0.2); /* 左 */
+    box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     padding: 10px;
 }

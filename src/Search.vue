@@ -8,6 +8,7 @@
                 v-model="searchText"
                 @keydown.enter.exact="clickNext()"
                 @keydown.shift.enter="clickLast()"
+                @keydown.esc.exact="clickClose()"
                 @input="handleInput"
             />
         </div>
@@ -36,7 +37,7 @@ const searchText = ref("")
 const resultCount = ref(0)
 const resultIndex = ref(0)
 const resultRange = ref()
-const placeholder = "🔍︎Enter"
+const placeholder = "🔍︎ (Shift) + Enter"
 
 const props = defineProps<{
     document: Element,
