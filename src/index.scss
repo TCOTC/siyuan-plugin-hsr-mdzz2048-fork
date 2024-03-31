@@ -18,14 +18,16 @@
     border-radius: 20px;
     text-align: center;
     cursor: default;
+    background-color: white;
+    transition: background-color 0.5s;
 }
 .highlight-search-result .search-dialog .search-tools>div:hover {
     background-color: #d3d3d38b;
-    transition: background-color 0.7s;
+    transition: background-color 0.5s;
 }
 .highlight-search-result .search-dialog .search-tools>div:active {
     background-color: #909090b1;
-    transition: background-color 0.7s;
+    transition: background-color 0.2s;
 }
 
 ::highlight(search-results) {

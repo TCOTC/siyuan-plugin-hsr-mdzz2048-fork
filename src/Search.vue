@@ -69,9 +69,10 @@ function handleInput() {
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
 function highlightHitResult(value: string, change: boolean) { // 搜索并高亮结果
     
-    // 如果文本框内容改变，自动重置搜索结果索引计数为 0
+    // 如果文本框内容改变，搜索结果和索引计数都立刻清零
     if (change == true) {
         resultIndex.value = 0
+        resultCount.value = 0
     }
 
     // 首先，选取所有符合条件的元素
@@ -207,6 +208,7 @@ margin-right: 5px;
 .search-tools > div {
     display: flex;
     margin-left: 5px;
+    align-items: center;
 }
 .icon--14_14 {
     width: 14px;
