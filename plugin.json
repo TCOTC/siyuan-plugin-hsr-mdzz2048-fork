@@ -2,13 +2,13 @@
   "name": "siyuan-plugin-hsr-mdzz2048-fork",
   "author": "TCOTC",
   "url": "https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "minAppVersion": "2.9.8",
   "backends": ["windows", "linux", "darwin"],
   "frontends": ["desktop", "browser-desktop"],
   "displayName": {
-    "default": "Highlight search results",
-    "zh_CN": "高亮搜索结果Ⅱ"
+    "default": "Document Highlight Search",
+    "zh_CN": "文档高亮搜索"
   },
   "description": {
     "default": "Search in the current document and highlight the search results",
@@ -27,9 +27,11 @@
     ]
   },
   "keywords": [
+    "文档",
     "高亮",
     "搜索",
     "Ctrl+F",
+    "document",
     "highlight",
     "search"
   ]

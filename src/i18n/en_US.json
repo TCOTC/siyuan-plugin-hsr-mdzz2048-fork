@@ -5,7 +5,7 @@
     "byeMenu": "Bye, Menu!",
     "helloPlugin": "Hello, siyuan-plugin-hsr-mdzz2048-fork Plugin!",
     "byePlugin": "Bye, siyuan-plugin-hsr-mdzz2048-fork Plugin!",
-    "showDialog": "Show dialog",
+    "showDialog": "Show search box",
     "getTab": "Print out all opened custom tabs in the debugger",
     "removedData": "Data deleted",
     "confirmRemove": "Confirm to delete the data in ${name}?",
