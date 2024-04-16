@@ -22,11 +22,11 @@
     transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:hover {
-    background-color: var(--b3-theme-surface-light);
+    background-color: var(--b3-theme-surface-lighter);
     transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:active {
-    background-color: var(--b3-theme-surface-lighter);
+    background-color: var(--b3-theme-on-surface);
     transition: background-color 0.2s;
 }
 
