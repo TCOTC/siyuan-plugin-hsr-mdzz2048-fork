@@ -6,8 +6,8 @@
 .highlight-search-result .search-dialog {
     position: relative;
     z-index: 5;
-    background-color: white;
-    border: 1px solid white;
+    background-color: var(--b3-theme-surface);
+    border: 1px solid var(--b3-theme-surface);
     box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     padding: 10px;
@@ -18,15 +18,15 @@
     border-radius: 20px;
     text-align: center;
     cursor: default;
-    background-color: white;
+    background-color: var(--b3-theme-surface);
     transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:hover {
-    background-color: #d3d3d38b;
+    background-color: var(--b3-theme-surface-light);
     transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:active {
-    background-color: #909090b1;
+    background-color: var(--b3-theme-surface-lighter);
     transition: background-color 0.2s;
 }
 
