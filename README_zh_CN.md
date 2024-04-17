@@ -55,4 +55,5 @@
 ##### 2024-04-17
 
 - 改进暗黑模式下的颜色
-- 支持带文本样式和超链接的搜索 [#11](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/11)
+- 支持带文本样式和超链接的搜索 [#11](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/11) ，但引入了新问题：分屏时只能搜索到左上角页签中的内容
+- 分屏时只打开一个输入框
