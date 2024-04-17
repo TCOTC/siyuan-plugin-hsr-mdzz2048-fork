@@ -66,16 +66,30 @@ export default class PluginHighlight extends Plugin {
         edits.forEach(edit => {
             const existingElement = edit.querySelector(`.${CLASS_NAME}`);
     
+            // 如果不存在具有 CLASS_NAME 类名的元素，则创建一个新的元素并挂载 SearchVue 组件
             if (!existingElement) {
                 const element = document.createElement("div");
                 element.className = CLASS_NAME;
-                edit.appendChild(element);
-                console.log(element, edit);
-    
+                edit.appendChild(element); // 将新元素添加到编辑区域中
+                console.log(element, edit); // 打印新元素和编辑区域元素
+
+                // 创建 Vue 应用并挂载 SearchComponent 组件到新创建的元素中
                 createApp(SearchVue, {
                     document: edit,
                     element: element,
                 }).component('search-component', SearchComponent).mount(element);
+            } else {
+                // 如果存在具有 CLASS_NAME 类名的元素，则执行以下操作
+                const rootElement = existingElement; // 将已存在的元素作为根元素
+                // 查找具有 CLASS_NAME 类名的根元素
+                const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
+                if (inputElement) {
+                    // 等待一小段时间确保元素加载完全，然后聚焦到输入框并选中其中的文本
+                    setTimeout(() => {
+                        inputElement.focus();
+                        inputElement.select();
+                    }, 100);
+                }
             }
         });
     }
