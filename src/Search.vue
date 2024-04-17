@@ -4,6 +4,7 @@
             <input
                 type="text"
                 class="b3-text-field fn__size200"
+                spellcheck="false"
                 :placeholder="placeholder"
                 v-model="searchText"
                 @keydown.enter.exact="clickNext()"
@@ -68,7 +69,7 @@ function handleInput() {
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
-function highlightHitResult(value: string, change: boolean) { // 搜索并高亮结果
+function highlightHitResult0(value: string, change: boolean) { // 搜索并高亮结果
     
     // 如果文本框内容改变，搜索结果和索引计数都立刻清零
     if (change == true) {
@@ -149,6 +150,85 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     // 注册高亮
     CSS.highlights.set("search-results", searchResultsHighlight)
 
+    // 滚动页面
+    // scroollIntoRanges(resultIndex.value)
+}
+function highlightHitResult(value: string, change: boolean) { // 搜索并高亮结果
+
+    // 如果文本框内容改变，搜索结果和索引计数都立刻清零
+    if (change == true) {
+        resultIndex.value = 0
+        resultCount.value = 0
+    }
+
+    // 首先，选取所有符合条件的元素
+    // const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
+    // 获取文档根,后续直接对全文档文本进行搜索,
+    const docRoot = document.querySelector('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docText=docRoot.textContent.toLowerCase();
+    const docLen=docText.length;
+
+    // 准备一个数组来保存所有文本节点
+    const allTextNodes = [];
+    let incr_lens = [];
+    let cur_len0=0;
+
+    const treeWalker = document.createTreeWalker(docRoot, NodeFilter.SHOW_TEXT);
+    let currentNode = treeWalker.nextNode();
+    while (currentNode) {
+        allTextNodes.push(currentNode);
+        cur_len0+=currentNode.textContent.length
+        incr_lens.push(cur_len0);
+        currentNode = treeWalker.nextNode();
+    }
+
+    // 清除上个高亮
+    CSS.highlights.clear()
+
+    // 为空判断
+    const str = value.trim().toLowerCase()
+    if (!str) return
+    let textNodeCnt=allTextNodes.length
+    let cur_nodeIdx=0;
+    let txtNode
+    // 查找所有文本节点是否包含搜索词，并创建对应的 Range 对象
+    // 把全局匹配索引转换为文本节点的索引和offset,使得range可以跨多个文本节点
+    let ranges = [];
+    let startIndex = 0;
+    let endIndex=0;
+    while ((startIndex = docText.indexOf(str, startIndex)) !== -1) {
+        const range = document.createRange();
+        endIndex=startIndex + str.length
+        // console.log(`开始结束索引:${startIndex}-${endIndex}`)
+        try {
+            while (cur_nodeIdx<textNodeCnt-1 && incr_lens[cur_nodeIdx]<=startIndex){
+              cur_nodeIdx++
+            }
+            txtNode= allTextNodes[cur_nodeIdx]
+            let startOffset=startIndex-incr_lens[cur_nodeIdx]+txtNode.textContent.length;
+            // console.log(`cur_nodeIdx:${cur_nodeIdx}|offset:${startOffset}|txtNode:${txtNode.textContent}`)
+            range.setStart(txtNode, startOffset);
+
+            while (cur_nodeIdx<textNodeCnt-1 && incr_lens[cur_nodeIdx]<endIndex){
+              cur_nodeIdx++
+            }
+            txtNode= allTextNodes[cur_nodeIdx]
+            let endOffset=endIndex-incr_lens[cur_nodeIdx]+txtNode.textContent.length;
+            range.setEnd(txtNode,endOffset);
+            ranges.push(range);
+        } catch (error) {
+            console.error("Error setting range in node:", error);
+        }
+        startIndex = endIndex;
+    }
+    // 创建高亮对象
+    const searchResultsHighlight = new Highlight(...ranges.flat())
+    resultCount.value = ranges.flat().length
+    resultRange.value = ranges.flat()
+    // console.log(ranges.flat())
+
+    // 注册高亮
+    CSS.highlights.set("search-results", searchResultsHighlight)
     // 滚动页面
     // scroollIntoRanges(resultIndex.value)
 }
