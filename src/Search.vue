@@ -165,7 +165,7 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     // 首先，选取所有符合条件的元素
     // const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
     // 获取文档根,后续直接对全文档文本进行搜索,
-    const docRoot = document.querySelector('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docRoot = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
     const docText=docRoot.textContent.toLowerCase();
     const docLen=docText.length;
 
