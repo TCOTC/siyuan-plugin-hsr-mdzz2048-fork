@@ -4,6 +4,7 @@
             <input
                 type="text"
                 class="b3-text-field fn__size200"
+                spellcheck="false"
                 :placeholder="placeholder"
                 v-model="searchText"
                 @keydown.enter.exact="clickNext()"
@@ -68,8 +69,93 @@ function handleInput() {
 // REF: https://juejin.cn/post/7199438741533376573
 // 使用 [CSS 自定义高亮 API - Web API 接口参考 | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Custom_Highlight_API)
 // 兼容性：Chrome、Edge (105+), Safari (17.2+), firefox (寄), Electron (思源使用的版本 > 28.0, 可以使用这个 API)
-function highlightHitResult(value: string, change: boolean) { // 搜索并高亮结果
+
+// function highlightHitResult0(value: string, change: boolean) { // 搜索并高亮结果
     
+//     // 如果文本框内容改变，搜索结果和索引计数都立刻清零
+//     if (change == true) {
+//         resultIndex.value = 0
+//         resultCount.value = 0
+//     }
+
+//     // 首先，选取所有符合条件的元素
+//     const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
+
+//     // 准备一个数组来保存所有文本节点
+//     const allTextNodes = [];
+
+//     // 定义一个辅助函数，用于检查一个元素是否是另一个元素的后代
+//     function isDescendant(parent, child) {
+//         let node = child.parentNode;
+//         while (node != null) {
+//             if (node == parent) {
+//                 return true;
+//             }
+//             node = node.parentNode;
+//         }
+//         return false;
+//     }
+
+
+//     // 对每个符合条件的元素，首先检查它是否是已选元素的后代，如果不是，则使用 createTreeWalker 遍历其文本节点
+//     elements.forEach(element => {
+//         // 检查当前元素是否是任何其他已选元素的后代
+//         const isNested = Array.from(elements).some(otherElement => otherElement !== element && isDescendant(otherElement, element));
+        
+//         // 如果当前元素不是其他元素的后代，则遍历其文本节点
+//         // if (!isNested && isElementVisible(element)) { // 判断元素是否可见
+//         if (!isNested) {
+//             const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+//             let currentNode = treeWalker.nextNode();
+//             while (currentNode) {
+//                 allTextNodes.push(currentNode);
+//                 currentNode = treeWalker.nextNode();
+//             }
+//         }
+//     });
+//     // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点，且避免了重复计数
+
+
+//     // 清除上个高亮
+//     CSS.highlights.clear()
+    
+//     // 为空判断
+//     const str = value.trim().toLowerCase()
+//     if (!str) return
+    
+
+//     // 查找所有文本节点是否包含搜索词，并创建对应的 Range 对象
+//     let ranges = [];
+//     allTextNodes.forEach((node) => {
+//         const textContent = node.textContent.toLowerCase();
+//         let startIndex = 0;
+//         while ((startIndex = textContent.indexOf(str, startIndex)) !== -1) {
+//             const range = document.createRange();
+//             try {
+//                 range.setStart(node, startIndex);
+//                 range.setEnd(node, startIndex + str.length);
+//                 ranges.push(range);
+//             } catch (error) {
+//                 console.error("Error setting range in node:", node, error);
+//             }
+//             startIndex += str.length;
+//         }
+//     });
+
+//     // 创建高亮对象
+//     const searchResultsHighlight = new Highlight(...ranges.flat())
+//     resultCount.value = ranges.flat().length
+//     resultRange.value = ranges.flat()
+//     // console.log(ranges.flat())
+
+//     // 注册高亮
+//     CSS.highlights.set("search-results", searchResultsHighlight)
+
+//     // 滚动页面
+//     // scroollIntoRanges(resultIndex.value)
+// }
+function highlightHitResult(value: string, change: boolean) { // 搜索并高亮结果
+
     // 如果文本框内容改变，搜索结果和索引计数都立刻清零
     if (change == true) {
         resultIndex.value = 0
@@ -77,69 +163,65 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     }
 
     // 首先，选取所有符合条件的元素
-    const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
+    // const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
+    // 获取文档根,后续直接对全文档文本进行搜索,
+    const docRoot = document.querySelector('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docText=docRoot.textContent.toLowerCase();
+    const docLen=docText.length;
 
     // 准备一个数组来保存所有文本节点
     const allTextNodes = [];
+    let incr_lens = [];
+    let cur_len0=0;
 
-    // 定义一个辅助函数，用于检查一个元素是否是另一个元素的后代
-    function isDescendant(parent, child) {
-        let node = child.parentNode;
-        while (node != null) {
-            if (node == parent) {
-                return true;
-            }
-            node = node.parentNode;
-        }
-        return false;
+    const treeWalker = document.createTreeWalker(docRoot, NodeFilter.SHOW_TEXT);
+    let currentNode = treeWalker.nextNode();
+    while (currentNode) {
+        allTextNodes.push(currentNode);
+        cur_len0+=currentNode.textContent.length
+        incr_lens.push(cur_len0);
+        currentNode = treeWalker.nextNode();
     }
-
-
-    // 对每个符合条件的元素，首先检查它是否是已选元素的后代，如果不是，则使用 createTreeWalker 遍历其文本节点
-    elements.forEach(element => {
-        // 检查当前元素是否是任何其他已选元素的后代
-        const isNested = Array.from(elements).some(otherElement => otherElement !== element && isDescendant(otherElement, element));
-        
-        // 如果当前元素不是其他元素的后代，则遍历其文本节点
-        // if (!isNested && isElementVisible(element)) { // 判断元素是否可见
-        if (!isNested) {
-            const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-            let currentNode = treeWalker.nextNode();
-            while (currentNode) {
-                allTextNodes.push(currentNode);
-                currentNode = treeWalker.nextNode();
-            }
-        }
-    });
-    // 此时，allTextNodes 数组包含了所有符合条件元素内的文本节点，且避免了重复计数
-
 
     // 清除上个高亮
     CSS.highlights.clear()
-    
+
     // 为空判断
     const str = value.trim().toLowerCase()
     if (!str) return
-    
-
+    let textNodeCnt=allTextNodes.length
+    let cur_nodeIdx=0;
+    let txtNode
     // 查找所有文本节点是否包含搜索词，并创建对应的 Range 对象
+    // 把全局匹配索引转换为文本节点的索引和offset,使得range可以跨多个文本节点
     let ranges = [];
-    allTextNodes.forEach((node) => {
-        const textContent = node.textContent.toLowerCase();
-        let startIndex = 0;
-        while ((startIndex = textContent.indexOf(str, startIndex)) !== -1) {
-            const range = document.createRange();
-            try {
-                range.setStart(node, startIndex);
-                range.setEnd(node, startIndex + str.length);
-                ranges.push(range);
-            } catch (error) {
-                console.error("Error setting range in node:", node, error);
+    let startIndex = 0;
+    let endIndex=0;
+    while ((startIndex = docText.indexOf(str, startIndex)) !== -1) {
+        const range = document.createRange();
+        endIndex=startIndex + str.length
+        // console.log(`开始结束索引:${startIndex}-${endIndex}`)
+        try {
+            while (cur_nodeIdx<textNodeCnt-1 && incr_lens[cur_nodeIdx]<=startIndex){
+              cur_nodeIdx++
             }
-            startIndex += str.length;
-        }
-    });
+            txtNode= allTextNodes[cur_nodeIdx]
+            let startOffset=startIndex-incr_lens[cur_nodeIdx]+txtNode.textContent.length;
+            // console.log(`cur_nodeIdx:${cur_nodeIdx}|offset:${startOffset}|txtNode:${txtNode.textContent}`)
+            range.setStart(txtNode, startOffset);
 
+            while (cur_nodeIdx<textNodeCnt-1 && incr_lens[cur_nodeIdx]<endIndex){
+              cur_nodeIdx++
+            }
+            txtNode= allTextNodes[cur_nodeIdx]
+            let endOffset=endIndex-incr_lens[cur_nodeIdx]+txtNode.textContent.length;
+            range.setEnd(txtNode,endOffset);
+            ranges.push(range);
+        } catch (error) {
+            console.error("Error setting range in node:", error);
+        }
+        startIndex = endIndex;
+    }
     // 创建高亮对象
     const searchResultsHighlight = new Highlight(...ranges.flat())
     resultCount.value = ranges.flat().length
@@ -148,7 +230,6 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
 
     // 注册高亮
     CSS.highlights.set("search-results", searchResultsHighlight)
-
     // 滚动页面
     // scroollIntoRanges(resultIndex.value)
 }
