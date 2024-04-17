@@ -250,7 +250,7 @@ function clickLast() { // 上一个
         resultIndex.value = resultCount.value
     }
     else if (resultCount.value == 0) {
-        return;
+        resultIndex.value = 0
     }
     scroollIntoRanges(resultIndex.value -1)
 }
@@ -263,7 +263,7 @@ function clickNext() { // 下一个
         resultIndex.value = 1
     }
     else if (resultCount.value == 0) {
-        return;
+        resultIndex.value = 0
     }
     scroollIntoRanges(resultIndex.value -1)
 }
