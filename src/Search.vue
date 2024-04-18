@@ -165,7 +165,9 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     // 首先，选取所有符合条件的元素
     // const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
     // 获取文档根,后续直接对全文档文本进行搜索,
-    const docRoot = document.querySelector('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docRoot = props.document.querySelector('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    //console.log("docRoot:")
+    //console.log(docRoot)
     const docText=docRoot.textContent.toLowerCase();
     const docLen=docText.length;
 
@@ -236,9 +238,15 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
 function scroollIntoRanges(index: number) {
     const ranges = resultRange.value as Range[]
     const range = ranges[index]
-    const parent = range.commonAncestorContainer.parentElement
-    parent.scrollIntoView({ behavior: 'smooth', block: "center" })
+    // const parent = range.commonAncestorContainer.parentElement
+    // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
+    const docContentElement  = props.document.querySelector('.layout-tab-container > div:not(.fn__none) >.protyle-content') as HTMLElement;
+    let doc_rect=docContentElement.getBoundingClientRect()
+    let mid_y=doc_rect.top+doc_rect.height/2
+    let range_rect = range.getBoundingClientRect();
+    docContentElement.scrollBy(0,range_rect.y-mid_y)
+  
     CSS.highlights.set("search-focus", new Highlight(range))
 }
 function clickLast() { // 上一个
