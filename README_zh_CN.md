@@ -26,10 +26,6 @@
 - 文本框在 0.4 秒内无编辑则自动搜索
 - 只搜索在文档区域内的文本，不包含界面和文档标题
 
-问题：
-
-- 代码块内无语法高亮的文本在搜索时无法移动到界面中央，所以不适合用于搜索代码块内的文本
-
 #### 更新
 
 ##### 2024-03-27
@@ -56,5 +52,9 @@
 
 - 改进暗黑模式下的颜色
 - 支持带文本样式和超链接的搜索 [#11](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/11) ，但引入了新问题：分屏时只能搜索到左上角页签中的内容
-- 如果搜索框已弹出，再次点击顶栏按钮或快捷键时，会重新将焦点移动到搜索框并全选内容 [#9](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/9)
-- 分屏时只打开一个输入框 [#12](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/12)
+- 如果搜索框已弹出，再次点击顶栏按钮或快捷键时，会重新将焦点移动到当前聚焦的页签中的搜索框并全选内容 [#9](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/9)
+
+##### 2024-04-18
+
+- 分屏时在当前聚焦页签打开搜索框，支持在不同的页签中单独搜索 [#14](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/14)
+- 代码块内无语法高亮的文本在搜索时可以移动到界面中央了 [#14](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/14)
