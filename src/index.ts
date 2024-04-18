@@ -11,7 +11,7 @@ const SearchComponent = {
       onMounted(() => {
         const rootElement = document.querySelector(`.${CLASS_NAME}`);
         if (rootElement) {
-          const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
+          const inputElement = rootElement.querySelector('.layout__center [data-type='wnd'].layout__wnd--active > .layout-tab-container .search-dialog .b3-text-field');// 要在当前聚焦的页签中搜索元素
           if (inputElement) {
             setTimeout(() => { // 等待一小段时间确保元素加载完全
               inputElement.focus();
@@ -82,7 +82,7 @@ export default class PluginHighlight extends Plugin {
                 // 如果存在具有 CLASS_NAME 类名的元素，则执行以下操作
                 const rootElement = existingElement; // 将已存在的元素作为根元素
                 // 查找具有 CLASS_NAME 类名的根元素
-                const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
+                const inputElement = rootElement.querySelector('.layout__center [data-type='wnd'].layout__wnd--active > .layout-tab-container .search-dialog .b3-text-field');// 要在当前聚焦的页签中搜索元素
                 if (inputElement) {
                     // 等待一小段时间确保元素加载完全，然后聚焦到输入框并选中其中的文本
                     setTimeout(() => {
