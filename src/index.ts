@@ -9,9 +9,9 @@ const CLASS_NAME = "highlight-search-result"
 const SearchComponent = {
     setup() {
       onMounted(() => {
-        const rootElement = document.querySelector(`.layout__center [data-type="wnd"].layout__wnd--active > .layout-tab-container`);
+        const rootElement = document.querySelector(`.${CLASS_NAME}`);
         if (rootElement) {
-          const inputElement = rootElement.querySelector(`.${CLASS_NAME} .search-dialog .b3-text-field`);
+          const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
           if (inputElement) {
             setTimeout(() => { // 等待一小段时间确保元素加载完全
               inputElement.focus();
