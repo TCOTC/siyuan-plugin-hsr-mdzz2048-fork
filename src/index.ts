@@ -16,7 +16,7 @@ const SearchComponent = {
             setTimeout(() => { // 等待一小段时间确保元素加载完全
               inputElement.focus();
               inputElement.select();
-            }, 300);
+            }, 100);
           }
         }
       });
@@ -88,7 +88,7 @@ export default class PluginHighlight extends Plugin {
                     setTimeout(() => {
                         inputElement.focus();
                         inputElement.select();
-                    }, 300);
+                    }, 100);
                 }
             }
         });
