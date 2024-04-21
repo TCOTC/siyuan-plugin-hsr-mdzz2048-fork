@@ -241,11 +241,14 @@ function scroollIntoRanges(index: number) {
     // const parent = range.commonAncestorContainer.parentElement
     // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
-    const docContentElement  = props.document.querySelector('.layout-tab-container > div:not(.fn__none) >.protyle-content') as HTMLElement;
-    let doc_rect=docContentElement.getBoundingClientRect()
-    let mid_y=doc_rect.top+doc_rect.height/2
+    const docContentElement = props.document.querySelector('.layout-tab-container > div:not(.fn__none) >.protyle-content') as HTMLElement;
+    let doc_rect = docContentElement.getBoundingClientRect();
+    let mid_y = doc_rect.top + doc_rect.height / 2;
     let range_rect = range.getBoundingClientRect();
-    docContentElement.scrollBy(0,range_rect.y-mid_y)
+
+    if (range_rect.top < doc_rect.top || range_rect.bottom > doc_rect.bottom) {
+    range.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   
     CSS.highlights.set("search-focus", new Highlight(range))
 }
