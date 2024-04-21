@@ -241,43 +241,11 @@ function scroollIntoRanges(index: number) {
     // const parent = range.commonAncestorContainer.parentElement
     // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
-    const docContentElement = props.document.querySelector('.layout-tab-container > div:not(.fn__none) >.protyle-content') as HTMLElement;
-    let doc_rect = docContentElement.getBoundingClientRect();
-    let mid_y = doc_rect.top + doc_rect.height / 2;
+    const docContentElement  = props.document.querySelector('.layout-tab-container > div:not(.fn__none) >.protyle-content') as HTMLElement;
+    let doc_rect=docContentElement.getBoundingClientRect()
+    let mid_y=doc_rect.top+doc_rect.height/2
     let range_rect = range.getBoundingClientRect();
-
-    // 计算滚动距离
-    let scrollDistance = range_rect.y - mid_y;
-    let duration = 500; // 滚动动画的持续时间，单位为毫秒
-    let startTime = performance.now();
-
-    function smoothScroll(timestamp: number) {
-    let elapsed = timestamp - startTime;
-    let progress = Math.min(elapsed / duration, 1); // 计算滚动进度，限制在 0 到 1 之间
-
-    // 使用缓动函数（如 easeInOutQuad）来平滑滚动
-    let easedProgress = easeInOutQuad(progress);
-
-    // 计算当前滚动位置
-    let currentScrollDistance = scrollDistance * easedProgress;
-
-    // 执行滚动
-    docContentElement.scrollTo(0, currentScrollDistance);
-
-    // 判断是否还需要继续滚动
-    if (progress < 1) {
-        requestAnimationFrame(smoothScroll);
-    }
-    }
-
-    // 缓动函数，可根据需要选择其他缓动函数
-    function easeInOutQuad(progress: number) {
-    return progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
-    }
-
-    // 启动滚动动画
-    requestAnimationFrame(smoothScroll);
-
+    docContentElement.scrollBy(0,range_rect.y-mid_y)
   
     CSS.highlights.set("search-focus", new Highlight(range))
 }
