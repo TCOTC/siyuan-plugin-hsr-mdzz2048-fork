@@ -245,8 +245,11 @@ function scroollIntoRanges(index: number) {
     let doc_rect=docContentElement.getBoundingClientRect()
     let mid_y=doc_rect.top+doc_rect.height/2
     let range_rect = range.getBoundingClientRect();
-    docContentElement.scrollBy(0,range_rect.y-mid_y)
-  
+    docContentElement.scrollTo({
+    top: range_rect.y - mid_y,
+    behavior: 'smooth'
+    })
+
     CSS.highlights.set("search-focus", new Highlight(range))
 }
 function clickLast() { // 上一个
