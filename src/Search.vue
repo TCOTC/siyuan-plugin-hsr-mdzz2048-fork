@@ -245,9 +245,38 @@ function scroollIntoRanges(index: number) {
     let doc_rect=docContentElement.getBoundingClientRect()
     let mid_y=doc_rect.top+doc_rect.height/2
     let range_rect = range.getBoundingClientRect();
-    docContentElement.scrollBy(0,range_rect.y-mid_y)
+    smoothScrollTo(range_rect.y - mid_y);
   
     CSS.highlights.set("search-focus", new Highlight(range))
+}
+function smoothScrollTo(targetY) {
+    var currentY = window.scrollY;
+    var distance = targetY - currentY;
+    var startTime = null;
+
+    function animation(currentTime) {
+        if (startTime === null) {
+            startTime = currentTime;
+        }
+
+        var timeElapsed = currentTime - startTime;
+        var run = easeInOutQuad(timeElapsed, currentY, distance, 1000); // 控制滚动速度的函数
+
+        window.scrollTo(0, run);
+
+        if (timeElapsed < 1000) {
+            requestAnimationFrame(animation);
+        }
+    }
+
+    function easeInOutQuad(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    requestAnimationFrame(animation);
 }
 function clickLast() { // 上一个
     highlightHitResult(searchText.value, false)
