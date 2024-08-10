@@ -58,3 +58,7 @@
 
 - 分屏时在当前聚焦页签打开搜索框，支持在不同的页签中单独搜索 [#14](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/14)
 - 代码块内无语法高亮的文本在搜索时可以移动到界面中央了 [#14](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/pull/14)
+
+##### 2024-08-10
+
+- 更换了顶栏按钮的图标，不再复用「标记」图标
