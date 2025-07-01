@@ -61,7 +61,7 @@ export default class PluginHighlight extends Plugin {
     }
 
     addSearchElement() {
-        const edits = document.querySelectorAll(".layout__center [data-type='wnd'].layout__wnd--active > .layout-tab-container");
+        const edits = document.querySelectorAll(".protyle");
         // console.log(edits);
         edits.forEach(edit => {
             const existingElement = edit.querySelector(`.${CLASS_NAME}`);
