@@ -49,7 +49,7 @@ export default class PluginHighlight extends Plugin {
     }
 
     onLayoutReady() {
-        console.log(`frontend: ${getFrontend()}; backend: ${getBackend()}`);
+        // console.log(`frontend: ${getFrontend()}; backend: ${getBackend()}`);
     }
 
     onunload() {
@@ -57,12 +57,12 @@ export default class PluginHighlight extends Plugin {
     }
 
     uninstall() {
-        console.log("uninstall");
+        console.log("siyuan-plugin-hsr-mdzz2048-fork uninstall");
     }
 
     addSearchElement() {
         const edits = document.querySelectorAll(".layout__center [data-type='wnd'].layout__wnd--active > .layout-tab-container");
-        console.log(edits);
+        // console.log(edits);
         edits.forEach(edit => {
             const existingElement = edit.querySelector(`.${CLASS_NAME}`);
     
@@ -71,7 +71,7 @@ export default class PluginHighlight extends Plugin {
                 const element = document.createElement("div");
                 element.className = CLASS_NAME;
                 edit.appendChild(element); // 将新元素添加到编辑区域中
-                console.log(element, edit); // 打印新元素和编辑区域元素
+                // console.log(element, edit); // 打印新元素和编辑区域元素
 
                 // 创建 Vue 应用并挂载 SearchComponent 组件到新创建的元素中
                 createApp(SearchVue, {
