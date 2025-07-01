@@ -76,11 +76,11 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     // 首先，选取所有符合条件的元素
     // const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
     // 获取文档根,后续直接对全文档文本进行搜索,
-    const docRoot = props.document.querySelector('div:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docRoot = props.document.querySelector('.protyle:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
     //console.log("docRoot:")
     //console.log(docRoot)
     const docText=docRoot.textContent.toLowerCase();
-    const docLen=docText.length;
+    // const docLen=docText.length;
 
     // 准备一个数组来保存所有文本节点
     const allTextNodes = [];
@@ -152,7 +152,7 @@ function scroollIntoRanges(index: number) {
     // const parent = range.commonAncestorContainer.parentElement
     // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
-    const docContentElement  = props.document.querySelector('.protyle-content') as HTMLElement;
+    const docContentElement  = props.document.querySelector('.protyle:not(.fn__none) .protyle-content') as HTMLElement;
     let doc_rect=docContentElement.getBoundingClientRect()
     let mid_y=doc_rect.top+doc_rect.height/2
     let range_rect = range.getBoundingClientRect();

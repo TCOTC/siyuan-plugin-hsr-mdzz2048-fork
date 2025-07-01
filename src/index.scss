@@ -3,6 +3,11 @@
     top: 60px;
     right: 70px;
 }
+.highlight-search-result--mobile {
+    top: 30px;
+    right: unset;
+    align-self: center;
+}
 .highlight-search-result .search-dialog {
     position: relative;
     z-index: 8; // 编辑器全屏之后会遮挡 https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/21
@@ -11,6 +16,9 @@
     box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     padding: 10px;
+}
+.highlight-search-result--mobile .search-dialog {
+    z-index: 7; // 低于左右侧栏
 }
 
 .highlight-search-result .search-dialog .search-tools>div {

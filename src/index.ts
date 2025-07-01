@@ -11,7 +11,7 @@ const SearchComponent = {
       onMounted(() => {
         const rootElement = document.querySelector(`.${CLASS_NAME}`);
         if (rootElement) {
-          const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
+          const inputElement = rootElement.querySelector('.search-dialog .b3-text-field') as HTMLInputElement;
           if (inputElement) {
             setTimeout(() => { // 等待一小段时间确保元素加载完全
               inputElement.focus();
@@ -33,7 +33,7 @@ export default class PluginHighlight extends Plugin {
             title: this.i18n.topBarTitle,
             position: "right",
             callback: () => {
-                this.closeMobileMenu();
+                this.closePanel();
                 this.addSearchElement();
             }
         });
@@ -61,27 +61,55 @@ export default class PluginHighlight extends Plugin {
         console.log("siyuan-plugin-hsr-mdzz2048-fork uninstall");
     }
 
-    closeMobileMenu() {
-        const menu = document.getElementById('menu');
-        if (menu)
-            menu.removeAttribute('style');
+    isMobile() {
+        return !!(window as any).siyuan?.mobile;
+    };
 
-        const sideMask = document.querySelector('.side-mask');
-        if (sideMask)
-            sideMask.classList.add('fn__none');
-    }
+    // Mobile
+    closePanel() {
+        if (!this.isMobile()) return;
+
+        const menuElement = document.getElementById("menu");
+        const sidebarElement = document.getElementById("sidebar");
+        const modelElement = document.getElementById("model");
+        if (menuElement) menuElement.style.transform = "";
+        if (sidebarElement) sidebarElement.style.transform = "";
+        if (modelElement) modelElement.style.transform = "";
+        const maskElement = document.querySelector(".side-mask") as HTMLElement;
+        if (maskElement) {
+            maskElement.classList.add("fn__none");
+            maskElement.style.opacity = "";
+        }
+        (window as any).siyuan?.menus?.menu.remove();
+    };
 
     addSearchElement() {
-        const edits = document.querySelectorAll(".protyle");
+        let edits = document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
+        let isMobile = false;
+        if (edits.length === 0) {
+            isMobile = true;
+            edits = document.querySelectorAll("#editor");
+        }
         // console.log(edits);
         edits.forEach(edit => {
-            const existingElement = edit.querySelector(`.${CLASS_NAME}`);
+            let existingElement;
+            if (isMobile) {
+                existingElement = document.querySelector(`.${CLASS_NAME}`);
+            } else {
+                existingElement = edit.querySelector(`.${CLASS_NAME}`);
+            }
     
             // 如果不存在具有 CLASS_NAME 类名的元素，则创建一个新的元素并挂载 SearchVue 组件
             if (!existingElement) {
                 const element = document.createElement("div");
-                element.className = CLASS_NAME;
-                edit.appendChild(element); // 将新元素添加到编辑区域中
+                element.className = `${CLASS_NAME} ${isMobile ? CLASS_NAME + "--mobile" : ""}`;
+
+                // 将新元素添加到编辑区域中
+                if (isMobile) {
+                    edit.insertAdjacentElement("afterend", element);
+                } else {
+                    edit.appendChild(element);
+                }
                 // console.log(element, edit); // 打印新元素和编辑区域元素
 
                 // 创建 Vue 应用并挂载 SearchComponent 组件到新创建的元素中
@@ -93,7 +121,7 @@ export default class PluginHighlight extends Plugin {
                 // 如果存在具有 CLASS_NAME 类名的元素，则执行以下操作
                 const rootElement = existingElement; // 将已存在的元素作为根元素
                 // 查找具有 CLASS_NAME 类名的根元素
-                const inputElement = rootElement.querySelector('.search-dialog .b3-text-field');
+                const inputElement = rootElement.querySelector('.search-dialog .b3-text-field') as HTMLInputElement;
                 if (inputElement) {
                     // 等待一小段时间确保元素加载完全，然后聚焦到输入框并选中其中的文本
                     setTimeout(() => {
