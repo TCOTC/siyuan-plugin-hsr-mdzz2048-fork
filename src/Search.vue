@@ -33,6 +33,7 @@ import { ref } from "vue";
 import { onMounted } from 'vue';
 import { defineProps } from 'vue';
 import Svg from "./Svg.vue"
+import { CLASS_NAME } from "./index"
 
 const searchText = ref("")
 const resultCount = ref(0)
@@ -47,11 +48,15 @@ const props = defineProps<{
 
 // 设置焦点到输入框，并全选内容
 onMounted(() => {
-  const inputElement = document.querySelector('.highlight-search-result .search-dialog .b3-text-field');
-  if (inputElement) {
-    inputElement.focus();
-    inputElement.select();
-  }
+    const rootElement = document.querySelector(`.layout__wnd--active > .layout-tab-container .${CLASS_NAME}, #editor .${CLASS_NAME}`);
+    // console.log("rootElement", rootElement);
+    if (rootElement) {
+        const inputElement = rootElement.querySelector('.search-dialog .b3-text-field') as HTMLInputElement;
+        if (inputElement) {
+        inputElement.focus();
+        inputElement.select();
+        }
+    }
 });
 
 // 当文本框内容变动后超过0.4秒没有再次变动时，会触发 highlightHitResult 函数
