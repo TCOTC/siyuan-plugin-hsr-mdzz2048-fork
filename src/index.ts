@@ -33,6 +33,7 @@ export default class PluginHighlight extends Plugin {
             title: this.i18n.topBarTitle,
             position: "right",
             callback: () => {
+                this.closeMobileMenu();
                 this.addSearchElement();
             }
         });
@@ -60,8 +61,18 @@ export default class PluginHighlight extends Plugin {
         console.log("siyuan-plugin-hsr-mdzz2048-fork uninstall");
     }
 
+    closeMobileMenu() {
+        const menu = document.getElementById('menu');
+        if (menu)
+            menu.removeAttribute('style');
+
+        const sideMask = document.querySelector('.side-mask');
+        if (sideMask)
+            sideMask.classList.add('fn__none');
+    }
+
     addSearchElement() {
-        const edits = document.querySelectorAll(".layout__center [data-type='wnd'].layout__wnd--active > .layout-tab-container");
+        const edits = document.querySelectorAll(".protyle");
         // console.log(edits);
         edits.forEach(edit => {
             const existingElement = edit.querySelector(`.${CLASS_NAME}`);
