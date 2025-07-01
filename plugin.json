@@ -4,8 +4,22 @@
   "url": "https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork",
   "version": "0.6.0",
   "minAppVersion": "2.9.8",
-  "backends": ["windows", "linux", "darwin", "docker"],
-  "frontends": ["desktop", "browser-desktop"],
+  "backends": [
+    "windows",
+    "linux",
+    "darwin",
+    "ios",
+    "android",
+    "harmony",
+    "docker"
+  ],
+  "frontends": [
+    "desktop",
+    "mobile",
+    "browser-desktop",
+    "browser-mobile",
+    "desktop-window"
+  ],
   "displayName": {
     "default": "Document Highlight Search",
     "zh_CN": "文档高亮搜索"
