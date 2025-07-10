@@ -82,8 +82,8 @@ function highlightHitResult(value: string, change: boolean) { // 搜索并高亮
     // const elements = document.querySelectorAll('.layout-tab-container > div:not(.fn__none) .protyle-wysiwyg [data-node-id]');
     // 获取文档根,后续直接对全文档文本进行搜索,
     const docRoot = props.document.querySelector('.protyle:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
-    //console.log("docRoot:")
-    //console.log(docRoot)
+    // console.log("props.document", props.document);
+    // console.log("docRoot:", docRoot);
     const docText=docRoot.textContent.toLowerCase();
     // const docLen=docText.length;
 
@@ -205,7 +205,7 @@ function clickClose() { // 关闭
     margin-top: 5px;
 }
 .search-input {
-margin-right: 5px;
+    margin-right: 5px;
 }
 .search-tools {
     display: flex;
