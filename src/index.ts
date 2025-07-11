@@ -34,6 +34,9 @@ export default class PluginHighlight extends Plugin {
     private initialTop: number = 0;
     private currentDraggingElement: HTMLElement | null = null;
     
+    // 清理定时器
+    private cleanupTimer: number | null = null;
+    
     // 更新最后执行 CSS.highlights.set 的组件记录
     updateLastHighlightComponent(element: Element) {
         this.lastHighlightComponent = element;
@@ -47,6 +50,73 @@ export default class PluginHighlight extends Plugin {
     // 检查指定组件是否为最后执行 CSS.highlights.set 的组件
     isLastHighlightComponent(element: Element): boolean {
         return this.lastHighlightComponent === element;
+    }
+    
+    // 清理无效的组件引用
+    private cleanupInvalidComponents() {
+        // 检查 searchApps 中的元素是否仍然存在于 DOM 中
+        const invalidElements: Element[] = [];
+        this.searchApps.forEach((_, element) => {
+            if (!document.contains(element)) {
+                invalidElements.push(element);
+            }
+        });
+        
+        // 清理无效的元素
+        if (invalidElements.length > 0) {
+            console.warn("Component element detected as unexpectedly removed, cleaning up...");
+        }
+        
+        invalidElements.forEach(element => {
+            const app = this.searchApps.get(element);
+            if (app) {
+                try {
+                    app.unmount();
+                } catch (error) {
+                    console.error("Error unmounting Vue app:", error);
+                }
+            }
+            this.searchApps.delete(element);
+            
+            // 减少活跃组件计数
+            this.activeSearchComponentsCount = Math.max(0, this.activeSearchComponentsCount - 1);
+        });
+        
+        // 如果所有组件都被清理了，重置状态
+        if (this.activeSearchComponentsCount === 0) {
+            this.searchComponentCallbacks.clear();
+            this.eventBus.off("ws-main", this.handleEventBusEvent);
+            this.removeGlobalDragListeners();
+            this.lastHighlightComponent = null;
+        }
+        
+        // 清理无效的回调函数（这里可以根据需要添加更复杂的清理逻辑）
+        // 由于回调函数是组件级别的，当组件被意外移除时，对应的回调也会失效
+        // 但这里我们暂时保留，因为回调函数本身不会造成内存泄漏
+    }
+    
+    // 启动定期清理
+    private startCleanupTimer() {
+        if (this.cleanupTimer) {
+            clearInterval(this.cleanupTimer);
+        }
+        // 每 30 秒检查一次
+        this.cleanupTimer = window.setInterval(() => {
+            this.cleanupInvalidComponents();
+        }, 30000);
+    }
+    
+    // 停止定期清理
+    private stopCleanupTimer() {
+        if (this.cleanupTimer) {
+            clearInterval(this.cleanupTimer);
+            this.cleanupTimer = null;
+        }
+    }
+    
+    // 手动清理无效组件（供外部调用）
+    public manualCleanup() {
+        this.cleanupInvalidComponents();
     }
     
     onload() {
@@ -67,6 +137,11 @@ export default class PluginHighlight extends Plugin {
                 this.addSearchElement(false); // 传递 false 表示来自快捷键
             },
         });
+
+        // 测试清理机制是否正常工作
+        setTimeout(() => {
+            console.log("Plugin loaded successfully, cleanup mechanism activated");
+        }, 1000);
 
         console.log(this.i18n.helloPlugin);
     }
@@ -143,10 +218,14 @@ export default class PluginHighlight extends Plugin {
         if (this.activeSearchComponentsCount === 1) {
             // console.log("开始监听事件总线");
             this.eventBus.on("ws-main", this.handleEventBusEvent);
+            // this.eventBus.on("loaded-protyle-dynamic", this.handleEventBusEvent); // TODO功能 动态加载之后需要刷新搜索结果并高亮，但不要滚动
+            // this.eventBus.on("loaded-protyle-static", this.handleEventBusEvent); // TODO功能 浮窗查看上下文会重新加载编辑器，此时需要刷新搜索结果并高亮，但不要滚动
             // 只在桌面端开始监听全局拖拽事件
             if (!isMobile()) {
                 this.setupGlobalDragListeners();
             }
+            // 启动定期清理
+            this.startCleanupTimer();
         }
     }
 
@@ -168,6 +247,8 @@ export default class PluginHighlight extends Plugin {
             this.eventBus.off("ws-main", this.handleEventBusEvent);
             // 移除全局拖拽事件监听器
             this.removeGlobalDragListeners();
+            // 停止定期清理
+            this.stopCleanupTimer();
         }
     }
 
@@ -185,7 +266,11 @@ export default class PluginHighlight extends Plugin {
         // console.log("closeSearchDialog");
         // 销毁所有 Vue 应用实例
         this.searchApps.forEach((app) => {
-            app.unmount();
+            try {
+                app.unmount();
+            } catch (error) {
+                console.error("Error unmounting Vue app:", error);
+            }
         });
         this.searchApps.clear();
         
@@ -195,7 +280,11 @@ export default class PluginHighlight extends Plugin {
         // 移除所有 DOM 元素
         const existingElements = document.querySelectorAll(`.${CLASS_NAME}`);
         existingElements.forEach(element => {
-            element.remove();
+            try {
+                element.remove();
+            } catch (error) {
+                console.error("Error removing DOM element:", error);
+            }
         });
     }
 
@@ -205,7 +294,11 @@ export default class PluginHighlight extends Plugin {
         // 销毁特定的 Vue 应用实例
         const app = this.searchApps.get(element);
         if (app) {
-            app.unmount();
+            try {
+                app.unmount();
+            } catch (error) {
+                console.error("Error unmounting Vue app:", error);
+            }
             this.searchApps.delete(element);
         }
         
@@ -213,7 +306,11 @@ export default class PluginHighlight extends Plugin {
         // 这里不需要手动减少计数，因为 Vue 组件的 onUnmounted 钩子会自动调用 onSearchComponentUnmounted
         
         // 移除特定的 DOM 元素
-        element.remove();
+        try {
+            element.remove();
+        } catch (error) {
+            console.error("Error removing DOM element:", error);
+        }
     }
 
     onLayoutReady() {
@@ -223,12 +320,14 @@ export default class PluginHighlight extends Plugin {
     onunload() {
         this.closeSearchDialog();
         this.removeGlobalDragListeners();
+        this.stopCleanupTimer(); // 在插件卸载时停止清理
         console.log(this.i18n.byePlugin);
     }
 
     uninstall() {
         this.closeSearchDialog();
         this.removeGlobalDragListeners();
+        this.stopCleanupTimer(); // 在插件卸载时停止清理
         console.log("siyuan-plugin-hsr-mdzz2048-fork uninstall");
     }
 
@@ -253,6 +352,9 @@ export default class PluginHighlight extends Plugin {
     };
 
     addSearchElement(isFromTopBar: boolean = false) {
+        // 在创建新组件前先清理无效的组件
+        this.cleanupInvalidComponents();
+        
         let mobile = isMobile();
         let edits = mobile ? document.querySelectorAll("#editor") : document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
         // console.log(edits);
