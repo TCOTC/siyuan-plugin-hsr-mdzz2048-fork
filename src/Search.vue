@@ -129,7 +129,12 @@ function handleInput() {
 function calculateSearchResults(value: string, change: boolean) {
     // 为空判断
     const str = value.trim().toLowerCase()
-    if (!str) return [];
+    if (!str) {
+        // 当搜索文本为空时，清除已有的高亮
+        // 但不需要重置计数，方便撤回文本框编辑的时候恢复索引位置
+        CSS.highlights.clear();
+        return [];
+    }
 
     // 如果文本框内容改变，搜索结果和索引计数都立刻清零
     if (change == true) {
@@ -198,7 +203,11 @@ function calculateSearchResults(value: string, change: boolean) {
 function highlightHitResult(value: string, change: boolean) {
     const ranges = calculateSearchResults(value, change)
     
-    if (ranges.length === 0) return
+    if (ranges.length === 0) {
+        // 当没有搜索结果时，清除高亮
+        CSS.highlights.clear();
+        return;
+    }
 
     // 清除上个高亮
     CSS.highlights.clear()
