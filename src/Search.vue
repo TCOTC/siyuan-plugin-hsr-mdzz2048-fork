@@ -185,7 +185,11 @@ function calculateSearchResults(value: string, change: boolean) {
             txtNode = allTextNodes[cur_nodeIdx]
             let endOffset = endIndex - incr_lens[cur_nodeIdx] + txtNode.textContent.length;
             range.setEnd(txtNode, endOffset);
-            ranges.push(range);
+            
+            // 排除 style 元素内的搜索结果
+            if (range.commonAncestorContainer.parentElement?.tagName?.toLowerCase() !== 'style') {
+                ranges.push(range);
+            }
         } catch (error) {
             console.error("Error setting range in node:", error);
         }
@@ -244,6 +248,20 @@ function scroollIntoRanges(index: number, scroll: boolean = true) {
     }
   
     CSS.highlights.set("search-focus", new Highlight(range))
+    
+    // 输出当前聚焦的 range 对应的元素信息
+    // console.log("当前聚焦的 range 信息:", {
+    //     range: range,
+    //     startContainer: range.startContainer,
+    //     endContainer: range.endContainer,
+    //     startOffset: range.startOffset,
+    //     endOffset: range.endOffset,
+    //     textContent: range.toString(),
+    //     commonAncestorContainer: range.commonAncestorContainer,
+    //     parentElement: range.commonAncestorContainer.parentElement
+    // });
+    // console.log("range parentElement:", range.commonAncestorContainer.parentElement)
+
     // 更新最后执行 CSS.highlights.set 的组件记录
     props.plugin?.updateLastHighlightComponent?.(props.element);
 }
