@@ -256,6 +256,10 @@ export default class PluginHighlight extends Plugin {
         let mobile = isMobile();
         const edits = mobile ? document.querySelectorAll("#editor") : document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
         // console.log(edits);
+        if (edits.length === 0) {
+            console.error("no edits found");
+            return;
+        }
         edits.forEach((edit: { querySelector: (arg0: string) => any; insertAdjacentElement: (arg0: string, arg1: HTMLDivElement) => void; appendChild: (arg0: HTMLDivElement) => void; }) => {
             let existingElement: any;
             if (mobile) {
@@ -276,6 +280,13 @@ export default class PluginHighlight extends Plugin {
                     edit.appendChild(element);
                 }
                 // console.log(element, edit); // 打印新元素和编辑区域元素
+                
+                // 检查是否有选中的文本
+                const selectedText = this.getSelectedText();
+                if (selectedText) {
+                    // 如果有选中文本，通过 data 属性传递预设文本
+                    element.setAttribute('data-preset-text', selectedText);
+                }
 
                 // 创建 Vue 应用并挂载 SearchVue 组件到新创建的元素中
                 const app = createApp(SearchVue, {
@@ -296,11 +307,45 @@ export default class PluginHighlight extends Plugin {
                         // 只有来自顶栏按钮时才重置位置
                         this.resetComponentPosition((existingElement as HTMLElement).querySelector('.search-dialog'));
                     }
-                    // 聚焦并全选输入框内容
-                    inputElement.focus();
-                    inputElement.select();
+                    
+                    // 检查是否有选中的文本
+                    const selectedText = this.getSelectedText();
+                    if (selectedText) {
+                        // 如果有选中文本，设置到输入框并搜索
+                        inputElement.value = selectedText;
+                        // 触发 input 事件以更新 Vue 的响应式数据
+                        inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                        // 聚焦输入框
+                        inputElement.focus();
+                        // 延迟执行搜索，确保输入框值已更新
+                        setTimeout(() => {
+                            // 通过 Vue 组件实例触发搜索
+                            const vueApp = this.searchApps.get(existingElement);
+                            if (vueApp) {
+                                // 获取组件实例并调用搜索方法
+                                const componentInstance = vueApp._instance?.exposed;
+                                if (componentInstance && componentInstance.highlightHitResult) {
+                                    componentInstance.highlightHitResult(selectedText, true);
+                                }
+                            }
+                        }, 50);
+                    } else {
+                        // 如果没有选中文本，按照原来的逻辑聚焦并全选输入框内容
+                        inputElement.focus();
+                        inputElement.select();
+                    }
                 }
             }
         });
+    }
+    
+    // 获取当前选中的文本
+    private getSelectedText(): string {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) {
+            return '';
+        }
+        
+        return selection.getRangeAt(0).toString().trim() || '';
     }
 }

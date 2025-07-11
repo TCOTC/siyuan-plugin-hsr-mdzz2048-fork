@@ -51,8 +51,20 @@ const props = defineProps<{
 onMounted(() => {
     const inputElement = props.element.querySelector('.search-dialog .b3-text-field') as HTMLInputElement;
     if (inputElement) {
-        inputElement.focus();
-        inputElement.select();
+        // 检查是否有预设的文本值（通过 data 属性传递）
+        const presetText = props.element.getAttribute('data-preset-text');
+        if (presetText) {
+            props.element.removeAttribute('data-preset-text');
+            // 如果有预设文本，设置到输入框并执行搜索
+            searchText.value = presetText;
+            inputElement.value = presetText;
+            inputElement.focus();
+            highlightHitResult(presetText, true);
+        } else {
+            // 没有预设文本，按照原来的逻辑
+            inputElement.focus();
+            inputElement.select();
+        }
     }
     
     // 通知插件类组件已挂载
@@ -200,6 +212,11 @@ function highlightHitResult(value: string, change: boolean) {
     // 更新最后执行 CSS.highlights.set 的组件记录
     props.plugin?.updateLastHighlightComponent?.(props.element);
 }
+
+// 暴露函数给外部调用
+defineExpose({
+    highlightHitResult
+});
 function scroollIntoRanges(index: number, scroll: boolean = true) {
     const ranges = resultRange.value as Range[]
     if (!ranges || ranges.length === 0) {
