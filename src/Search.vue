@@ -143,7 +143,7 @@ function calculateSearchResults(value: string, change: boolean) {
     }
 
     // 获取文档根,后续直接对全文档文本进行搜索
-    const docRoot = props.edit.querySelector('.protyle:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docRoot = props.edit.classList.contains('protyle-content') ? props.edit.querySelector('.protyle-wysiwyg') : props.edit.querySelector('.protyle:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
     const docText = docRoot.textContent.toLowerCase();
 
     // 准备一个数组来保存所有文本节点
@@ -236,7 +236,7 @@ function scroollIntoRanges(index: number, scroll: boolean = true) {
     // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
     if (scroll) {
-        const docContentElement  = props.edit.querySelector('.protyle:not(.fn__none) .protyle-content') as HTMLElement;
+        const docContentElement = props.edit.classList.contains('protyle-content') ? props.edit as HTMLElement : props.edit.querySelector('.protyle:not(.fn__none) .protyle-content') as HTMLElement;
         let doc_rect=docContentElement.getBoundingClientRect()
         let mid_y=doc_rect.top+doc_rect.height/2
         let range_rect = range.getBoundingClientRect();

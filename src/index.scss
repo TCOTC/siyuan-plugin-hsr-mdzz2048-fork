@@ -37,6 +37,11 @@
     background-color: var(--b3-theme-on-surface);
     transition: background-color 0.2s;
 }
+// 浮窗内的搜索组件，需要尽量靠边
+.protyle-content > .highlight-search-result {
+    top: 25px;
+    right: 0;
+}
 
 ::highlight(search-results) {
     background-color: rgb(235 235 5);

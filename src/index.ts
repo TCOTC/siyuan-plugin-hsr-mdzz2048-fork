@@ -254,8 +254,15 @@ export default class PluginHighlight extends Plugin {
 
     addSearchElement(isFromTopBar: boolean = false) {
         let mobile = isMobile();
-        const edits = mobile ? document.querySelectorAll("#editor") : document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
+        let edits = mobile ? document.querySelectorAll("#editor") : document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
         // console.log(edits);
+        if (edits.length === 0) {
+            // // 一个浮窗多个编辑器
+            // edits = [document.activeElement?.closest('.block__popover')?.querySelector('.block__content')] as any;
+            if (document.activeElement.classList.contains('protyle-wysiwyg')) {
+                edits = [document.activeElement.closest('.protyle-content')] as any;
+            }
+        }
         if (edits.length === 0) {
             console.error("no edits found");
             return;
