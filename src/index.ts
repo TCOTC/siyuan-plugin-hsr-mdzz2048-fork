@@ -6,6 +6,11 @@ import "./index.scss"
 
 export const CLASS_NAME = "highlight-search-result";
 
+// 判断是否为移动端
+export const isMobile = () => {
+    return !!(window as any).siyuan?.mobile;
+};
+
 export default class PluginHighlight extends Plugin {
     icon: string = `<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.29289 1.29289C9.48043 1.10536 9.73478 1 10 1H18C19.6569 1 21 2.34315 21 4V8C21 8.55228 20.5523 9 20 9C19.4477 9 19 8.55228 19 8V4C19 3.44772 18.5523 3 18 3H11V8C11 8.55228 10.5523 9 10 9H5V20C5 20.5523 5.44772 21 6 21H10C10.5523 21 11 21.4477 11 22C11 22.5523 10.5523 23 10 23H6C4.34315 23 3 21.6569 3 20V8C3 7.73478 3.10536 7.48043 3.29289 7.29289L9.29289 1.29289ZM6.41421 7H9V4.41421L6.41421 7ZM20.1716 18.7574C20.6951 17.967 21 17.0191 21 16C21 13.2386 18.7614 11 16 11C13.2386 11 11 13.2386 11 16C11 18.7614 13.2386 21 16 21C17.0191 21 17.967 20.6951 18.7574 20.1716L21.2929 22.7071C21.6834 23.0976 22.3166 23.0976 22.7071 22.7071C23.0976 22.3166 23.0976 21.6834 22.7071 21.2929L20.1716 18.7574ZM13 16C13 14.3431 14.3431 13 16 13C17.6569 13 19 14.3431 19 16C19 17.6569 17.6569 19 16 19C14.3431 19 13 17.6569 13 16Z"/></svg>`
     
@@ -20,6 +25,14 @@ export default class PluginHighlight extends Plugin {
     
     // 记录最后执行 CSS.highlights.set 的组件
     private lastHighlightComponent: Element | null = null;
+    
+    // 拖拽相关状态
+    private isDragging: boolean = false;
+    private dragStartX: number = 0;
+    private dragStartY: number = 0;
+    private initialLeft: number = 0;
+    private initialTop: number = 0;
+    private currentDraggingElement: HTMLElement | null = null;
     
     // 更新最后执行 CSS.highlights.set 的组件记录
     updateLastHighlightComponent(element: Element) {
@@ -43,7 +56,7 @@ export default class PluginHighlight extends Plugin {
             position: "right",
             callback: () => {
                 this.closePanel();
-                this.addSearchElement();
+                this.addSearchElement(true); // 传递 true 表示来自顶栏按钮
             }
         });
 
@@ -51,11 +64,71 @@ export default class PluginHighlight extends Plugin {
             langKey: "showDialog",
             hotkey: "⌥⇧⌘F",
             callback: () => {
-                this.addSearchElement();
+                this.addSearchElement(false); // 传递 false 表示来自快捷键
             },
         });
 
         console.log(this.i18n.helloPlugin);
+    }
+
+    // 设置全局拖拽事件监听器
+    private setupGlobalDragListeners() {
+        document.addEventListener('mousemove', this.handleGlobalMouseMove);
+        document.addEventListener('mouseup', this.handleGlobalMouseUp);
+    }
+
+    // 移除全局拖拽事件监听器
+    private removeGlobalDragListeners() {
+        document.removeEventListener('mousemove', this.handleGlobalMouseMove);
+        document.removeEventListener('mouseup', this.handleGlobalMouseUp);
+    }
+
+    // 全局鼠标移动处理
+    private handleGlobalMouseMove = (event: MouseEvent) => {
+        // console.log("handleGlobalMouseMove: ", this.currentDraggingElement);
+        if (!this.isDragging || !this.currentDraggingElement) return;
+        
+        const deltaX = event.clientX - this.dragStartX;
+        const deltaY = event.clientY - this.dragStartY;
+        
+        this.currentDraggingElement.style.position = 'fixed';
+        this.currentDraggingElement.style.left = (this.initialLeft + deltaX) + 'px';
+        this.currentDraggingElement.style.top = (this.initialTop + deltaY) + 'px';
+        this.currentDraggingElement.style.zIndex = '9999';
+    }
+
+    // 全局鼠标释放处理
+    private handleGlobalMouseUp = () => {
+        this.isDragging = false;
+        this.currentDraggingElement = null;
+    }
+
+    // 开始拖拽（供组件调用）
+    startDragging(element: HTMLElement, startX: number, startY: number) {
+        // console.log("startDragging: ", element);
+        // 只在桌面端支持拖拽
+        // if (isMobile()) return;
+        
+        this.isDragging = true;
+        this.dragStartX = startX;
+        this.dragStartY = startY;
+        this.currentDraggingElement = element;
+        
+        const rect = element.getBoundingClientRect();
+        this.initialLeft = rect.left;
+        this.initialTop = rect.top;
+    }
+
+    // 重置组件位置（供组件调用）
+    resetComponentPosition(element: HTMLElement) {
+        // // 只在桌面端支持位置重置
+        // if (isMobile()) return;
+        
+        // 清除所有定位样式，让组件回到默认位置
+        element.style.position = '';
+        element.style.left = '';
+        element.style.top = '';
+        element.style.zIndex = '';
     }
 
     // 当搜索组件挂载时调用
@@ -70,7 +143,10 @@ export default class PluginHighlight extends Plugin {
         if (this.activeSearchComponentsCount === 1) {
             // console.log("开始监听事件总线");
             this.eventBus.on("ws-main", this.handleEventBusEvent);
-            // this.eventBus.on("loaded-protyle-static", this.handleEventBusEvent);
+            // 只在桌面端开始监听全局拖拽事件
+            if (!isMobile()) {
+                this.setupGlobalDragListeners();
+            }
         }
     }
 
@@ -90,7 +166,8 @@ export default class PluginHighlight extends Plugin {
         if (this.activeSearchComponentsCount === 0) {
             // console.log("取消监听事件总线");
             this.eventBus.off("ws-main", this.handleEventBusEvent);
-            // this.eventBus.off("loaded-protyle-static", this.handleEventBusEvent);
+            // 移除全局拖拽事件监听器
+            this.removeGlobalDragListeners();
         }
     }
 
@@ -145,21 +222,19 @@ export default class PluginHighlight extends Plugin {
 
     onunload() {
         this.closeSearchDialog();
+        this.removeGlobalDragListeners();
         console.log(this.i18n.byePlugin);
     }
 
     uninstall() {
         this.closeSearchDialog();
+        this.removeGlobalDragListeners();
         console.log("siyuan-plugin-hsr-mdzz2048-fork uninstall");
     }
 
-    isMobile() {
-        return !!(window as any).siyuan?.mobile;
-    };
-
     // Mobile
     closePanel() {
-        if (!this.isMobile()) return;
+        if (!isMobile()) return;
 
         const menuElement = document.getElementById("menu");
         const sidebarElement = document.getElementById("sidebar");
@@ -177,13 +252,13 @@ export default class PluginHighlight extends Plugin {
         (window as any).siyuan?.menus?.menu.remove();
     };
 
-    addSearchElement() {
-        let isMobile = this.isMobile();
-        const edits = isMobile ? document.querySelectorAll("#editor") : document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
+    addSearchElement(isFromTopBar: boolean = false) {
+        let mobile = isMobile();
+        const edits = mobile ? document.querySelectorAll("#editor") : document.querySelectorAll(".layout__wnd--active > .layout-tab-container");
         // console.log(edits);
         edits.forEach((edit: { querySelector: (arg0: string) => any; insertAdjacentElement: (arg0: string, arg1: HTMLDivElement) => void; appendChild: (arg0: HTMLDivElement) => void; }) => {
             let existingElement: any;
-            if (isMobile) {
+            if (mobile) {
                 existingElement = document.querySelector(`.${CLASS_NAME}`);
             } else {
                 existingElement = edit.querySelector(`.${CLASS_NAME}`);
@@ -192,10 +267,10 @@ export default class PluginHighlight extends Plugin {
             // 如果不存在具有 CLASS_NAME 类名的元素，则创建一个新的元素并挂载 SearchVue 组件
             if (!existingElement) {
                 const element = document.createElement("div");
-                element.className = `${CLASS_NAME} ${isMobile ? CLASS_NAME + "--mobile" : ""}`;
+                element.className = `${CLASS_NAME} ${mobile ? CLASS_NAME + "--mobile" : ""}`;
 
                 // 将新元素添加到编辑区域中
-                if (isMobile) {
+                if (mobile) {
                     edit.insertAdjacentElement("afterend", element);
                 } else {
                     edit.appendChild(element);
@@ -215,6 +290,13 @@ export default class PluginHighlight extends Plugin {
                 // 在具有 CLASS_NAME 类名的元素中查找输入框
                 const inputElement = existingElement.querySelector('.search-dialog .b3-text-field') as HTMLInputElement;
                 if (inputElement) {
+                    // 只有来自顶栏按钮时才重置位置
+                    if (isFromTopBar) {
+                        // console.log("existingElement:", existingElement);
+                        // 只有来自顶栏按钮时才重置位置
+                        this.resetComponentPosition((existingElement as HTMLElement).querySelector('.search-dialog'));
+                    }
+                    // 聚焦并全选输入框内容
                     inputElement.focus();
                     inputElement.select();
                 }

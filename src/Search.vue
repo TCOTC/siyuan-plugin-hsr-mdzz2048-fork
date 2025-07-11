@@ -13,7 +13,9 @@
                 @input="handleInput"
             />
         </div>
-        <span class="search-count">{{ resultIndex + "/" + resultCount }}</span>
+        <span class="search-count" 
+              :class="{ 'search-count--draggable': !isMobile() }"
+              @mousedown="handleMouseDown">{{ resultIndex + "/" + resultCount }}</span>
         <div class="search-tools">
             <div @click="clickLast">
                 <Svg icon="#iconUp" class="icon--14_14"></Svg>
@@ -29,10 +31,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { onMounted, onUnmounted } from 'vue';
-import { defineProps } from 'vue';
+import { ref, onMounted, onUnmounted, defineProps } from "vue";
 import Svg from "./Svg.vue"
+import { isMobile } from "./index"
 
 const searchText = ref("")
 const resultCount = ref(0)
@@ -62,6 +63,20 @@ onMounted(() => {
 onUnmounted(() => {
     props.plugin?.onSearchComponentUnmounted?.(eventBusHandle);
 });
+
+// 拖拽处理函数
+function handleMouseDown(event: MouseEvent) {
+    if (isMobile()) return;
+    // console.log("handleMouseDown: ", event);
+    // 获取整个搜索对话框元素
+    const searchDialog = (event.currentTarget as HTMLElement).closest('.search-dialog') as HTMLElement;
+    
+    // 使用插件提供的全局拖拽功能
+    props.plugin?.startDragging?.(searchDialog, event.clientX, event.clientY);
+    
+    // 防止文本选择
+    event.preventDefault();
+}
 
 function eventBusHandle(event: CustomEvent) {
     // console.log("event.detail: ", event.detail);
@@ -252,6 +267,14 @@ function clickClose() { // 关闭
 .search-count {
     min-width: 35px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch; /* 让元素拉伸到父容器高度 */
+}
+.search-count--draggable {
+    cursor: move; /* 显示可拖拽光标 */
+    user-select: none; /* 防止文本选择 */
 }
 .search-tools {
     display: flex;
