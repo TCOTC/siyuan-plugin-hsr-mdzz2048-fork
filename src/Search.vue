@@ -187,6 +187,7 @@ function calculateSearchResults(value: string, change: boolean) {
             range.setEnd(txtNode, endOffset);
             
             // 排除 style 元素内的搜索结果
+            // TODO: 试试改用 innerText 的效果 https://developer.mozilla.org/zh-CN/docs/Web/API/Node/textContent#与_innertext_的区别
             if (range.commonAncestorContainer.parentElement?.tagName?.toLowerCase() !== 'style') {
                 ranges.push(range);
             }
