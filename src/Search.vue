@@ -111,6 +111,20 @@ function eventBusHandle(event: CustomEvent) {
                 calculateSearchResults(searchText.value, false);
             }
         }, doneTypingInterval);
+    } else if (["loaded-protyle-dynamic", "loaded-protyle-static", "switch-protyle"].includes(event.type)) {
+        // 动态加载、静态加载、切换页签后需要刷新搜索结果并高亮，并重置 resultIndex
+        clearTimeout(typingTimer);
+        typingTimer = window.setTimeout(() => {
+            // 这里无论是否为最后高亮组件，都重置 resultIndex，避免索引错位
+            resultIndex.value = 0; // 文档加载或切换后重置索引
+            if (props.plugin?.isLastHighlightComponent?.(props.element)) {
+                // 只有当前组件是最后执行 CSS.highlights.set 的组件时才执行高亮操作
+                highlightHitResult(searchText.value, false);
+            } else {
+                // 不是最后高亮组件时，仅更新数字不执行高亮
+                calculateSearchResults(searchText.value, false);
+            }
+        }, doneTypingInterval);
     }
 }
 
@@ -143,7 +157,7 @@ function calculateSearchResults(value: string, change: boolean) {
     }
 
     // 获取文档根,后续直接对全文档文本进行搜索
-    const docRoot = props.edit.classList.contains('protyle-content') ? props.edit.querySelector('.protyle-wysiwyg') : props.edit.querySelector('.protyle:not(.fn__none) .protyle-wysiwyg') as HTMLElement;
+    const docRoot = props.edit.querySelector('.protyle:not(.fn__none) :is(.protyle-content:not(.fn__none) .protyle-wysiwyg, .protyle-preview:not(.fn__none) .b3-typography)') as HTMLElement;
     const docText = docRoot.textContent.toLowerCase();
 
     // 准备一个数组来保存所有文本节点
@@ -241,7 +255,8 @@ function scroollIntoRanges(index: number, scroll: boolean = true) {
     // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
     if (scroll) {
-        const docContentElement = props.edit.classList.contains('protyle-content') ? props.edit as HTMLElement : props.edit.querySelector('.protyle:not(.fn__none) .protyle-content') as HTMLElement;
+        console.log("scrollIntoRanges: ", props.edit)
+        const docContentElement = props.edit.querySelector('.protyle:not(.fn__none) :is(.protyle-content:not(.fn__none), .protyle-preview:not(.fn__none))') as HTMLElement;
         let doc_rect=docContentElement.getBoundingClientRect()
         let mid_y=doc_rect.top+doc_rect.height/2
         let range_rect = range.getBoundingClientRect();

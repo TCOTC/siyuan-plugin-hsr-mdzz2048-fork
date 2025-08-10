@@ -85,7 +85,7 @@ export default class PluginHighlight extends Plugin {
         // 如果所有组件都被清理了，重置状态
         if (this.activeSearchComponentsCount === 0) {
             this.searchComponentCallbacks.clear();
-            this.eventBus.off("ws-main", this.handleEventBusEvent);
+            this.eventBusOff();
             this.removeGlobalDragListeners();
             this.lastHighlightComponent = null;
         }
@@ -158,6 +158,23 @@ export default class PluginHighlight extends Plugin {
         document.removeEventListener('mouseup', this.handleGlobalMouseUp);
     }
 
+    // 监听事件总线事件
+    private eventBusOn() {
+        this.eventBus.on("ws-main", this.handleEventBusEvent);
+        this.eventBus.on("loaded-protyle-dynamic", this.handleEventBusEvent); // 动态加载之后需要刷新搜索结果并高亮，但不要滚动
+        this.eventBus.on("loaded-protyle-static", this.handleEventBusEvent); // 浮窗查看上下文会重新加载编辑器，此时需要刷新搜索结果并高亮，但不要滚动
+        this.eventBus.on("switch-protyle", this.handleEventBusEvent); // 切换页签之后需要刷新搜索结果并高亮，但不要滚动
+        // TODO功能: 监听编辑器模式切换，然后刷新搜索结果并高亮，依赖 https://github.com/siyuan-note/siyuan/issues/15516
+    }
+
+    // 移除事件总线事件监听器
+    private eventBusOff() {
+        this.eventBus.off("ws-main", this.handleEventBusEvent);
+        this.eventBus.off("loaded-protyle-dynamic", this.handleEventBusEvent); // 移除动态加载事件监听器
+        this.eventBus.off("loaded-protyle-static", this.handleEventBusEvent); // 移除静态加载事件监听器
+        this.eventBus.off("switch-protyle", this.handleEventBusEvent); // 移除切换页签事件监听器
+    }
+
     // 全局鼠标移动处理
     private handleGlobalMouseMove = (event: MouseEvent) => {
         // console.log("handleGlobalMouseMove: ", this.currentDraggingElement);
@@ -217,9 +234,7 @@ export default class PluginHighlight extends Plugin {
         // 如果是第一个组件，开始监听事件
         if (this.activeSearchComponentsCount === 1) {
             // console.log("开始监听事件总线");
-            this.eventBus.on("ws-main", this.handleEventBusEvent);
-            // this.eventBus.on("loaded-protyle-dynamic", this.handleEventBusEvent); // TODO功能 动态加载之后需要刷新搜索结果并高亮，但不要滚动
-            // this.eventBus.on("loaded-protyle-static", this.handleEventBusEvent); // TODO功能 浮窗查看上下文会重新加载编辑器，此时需要刷新搜索结果并高亮，但不要滚动
+            this.eventBusOn();
             // 只在桌面端开始监听全局拖拽事件
             if (!isMobile()) {
                 this.setupGlobalDragListeners();
@@ -244,7 +259,7 @@ export default class PluginHighlight extends Plugin {
         // 如果是最后一个组件，取消事件监听
         if (this.activeSearchComponentsCount === 0) {
             // console.log("取消监听事件总线");
-            this.eventBus.off("ws-main", this.handleEventBusEvent);
+            this.eventBusOff();
             // 移除全局拖拽事件监听器
             this.removeGlobalDragListeners();
             // 停止定期清理
@@ -254,7 +269,7 @@ export default class PluginHighlight extends Plugin {
 
     // 处理事件总线事件
     private handleEventBusEvent = (event: CustomEvent) => {
-        // console.log("handleEventBusEvent");
+        // console.log("handleEventBusEvent:", event);
         // 遍历所有回调函数并调用它们
         this.searchComponentCallbacks.forEach(callback => {
             callback(event);
@@ -362,7 +377,7 @@ export default class PluginHighlight extends Plugin {
             // // 一个浮窗多个编辑器
             // edits = [document.activeElement?.closest('.block__popover')?.querySelector('.block__content')] as any;
             if (document.activeElement.classList.contains('protyle-wysiwyg')) {
-                edits = [document.activeElement.closest('.protyle-content')] as any;
+                edits = [document.activeElement.closest('.protyle')] as any;
             }
         }
         if (edits.length === 0) {

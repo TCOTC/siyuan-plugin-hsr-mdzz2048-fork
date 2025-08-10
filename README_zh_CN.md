@@ -14,9 +14,10 @@
 
 #### 近期更新
 
-##### 2025-07-01
+##### 2025-08-10
 
-- 支持在浏览器、桌面端新窗口、移动端中使用插件 [#23](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/23)
+- 切换页签时重新搜索 [#2](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/2)
+- 支持在导出预览模式搜索 [#39](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/39)
 
 ##### 2025-07-12
 
@@ -25,3 +26,7 @@
 - 编辑文档后刷新高亮 [#24](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/24)
 - 支持选中文本搜索 [#20](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/20)
 - 支持在浮窗中搜索 [#27](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/27)
+
+##### 2025-07-01
+
+- 支持在浏览器、桌面端新窗口、移动端中使用插件 [#23](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/23)

@@ -38,7 +38,7 @@
     transition: background-color 0.2s;
 }
 // 浮窗内的搜索组件，需要尽量靠边
-.protyle-content > .highlight-search-result {
+.block__edit.protyle > .highlight-search-result {
     top: 25px;
     right: 0;
 }
