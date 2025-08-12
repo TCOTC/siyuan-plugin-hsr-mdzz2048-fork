@@ -111,7 +111,7 @@ function eventBusHandle(event: CustomEvent) {
                 calculateSearchResults(searchText.value, false);
             }
         }, doneTypingInterval);
-    } else if (["loaded-protyle-dynamic", "loaded-protyle-static", "switch-protyle"].includes(event.type)) {
+    } else if (["loaded-protyle-dynamic", "loaded-protyle-static", "switch-protyle", "switch-protyle-mode"].includes(event.type)) {
         // 动态加载、静态加载、切换页签后需要刷新搜索结果并高亮，并重置 resultIndex
         clearTimeout(typingTimer);
         typingTimer = window.setTimeout(() => {

@@ -20,7 +20,7 @@
     "glob": "^7.2.3",
     "minimist": "^1.2.8",
     "rollup-plugin-livereload": "^2.0.5",
-    "siyuan": "1.1.2",
+    "siyuan": "https://github.com/siyuan-note/petal#31f683104a2600dfb9f922d47e0a5e4256e1a13f",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "vite": "5.0.11",

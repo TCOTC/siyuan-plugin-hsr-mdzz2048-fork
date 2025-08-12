@@ -164,7 +164,7 @@ export default class PluginHighlight extends Plugin {
         this.eventBus.on("loaded-protyle-dynamic", this.handleEventBusEvent); // 动态加载之后需要刷新搜索结果并高亮，但不要滚动
         this.eventBus.on("loaded-protyle-static", this.handleEventBusEvent); // 浮窗查看上下文会重新加载编辑器，此时需要刷新搜索结果并高亮，但不要滚动
         this.eventBus.on("switch-protyle", this.handleEventBusEvent); // 切换页签之后需要刷新搜索结果并高亮，但不要滚动
-        // TODO功能: 监听编辑器模式切换，然后刷新搜索结果并高亮，依赖 https://github.com/siyuan-note/siyuan/issues/15516
+        this.eventBus.on("switch-protyle-mode", this.handleEventBusEvent); // 切换编辑器模式之后需要刷新搜索结果并高亮，但不要滚动 // https://github.com/siyuan-note/siyuan/issues/15516
     }
 
     // 移除事件总线事件监听器
@@ -173,6 +173,16 @@ export default class PluginHighlight extends Plugin {
         this.eventBus.off("loaded-protyle-dynamic", this.handleEventBusEvent); // 移除动态加载事件监听器
         this.eventBus.off("loaded-protyle-static", this.handleEventBusEvent); // 移除静态加载事件监听器
         this.eventBus.off("switch-protyle", this.handleEventBusEvent); // 移除切换页签事件监听器
+        this.eventBus.off("switch-protyle-mode", this.handleEventBusEvent); // 移除切换编辑器模式事件监听器
+    }
+
+    // 处理事件总线事件
+    private handleEventBusEvent = (event: CustomEvent) => {
+        // console.log("handleEventBusEvent:", event);
+        // 遍历所有回调函数并调用它们
+        this.searchComponentCallbacks.forEach(callback => {
+            callback(event);
+        });
     }
 
     // 全局鼠标移动处理
@@ -265,15 +275,6 @@ export default class PluginHighlight extends Plugin {
             // 停止定期清理
             this.stopCleanupTimer();
         }
-    }
-
-    // 处理事件总线事件
-    private handleEventBusEvent = (event: CustomEvent) => {
-        // console.log("handleEventBusEvent:", event);
-        // 遍历所有回调函数并调用它们
-        this.searchComponentCallbacks.forEach(callback => {
-            callback(event);
-        });
     }
 
     // 关闭搜索对话框
