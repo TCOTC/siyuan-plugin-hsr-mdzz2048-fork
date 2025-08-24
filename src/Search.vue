@@ -255,7 +255,7 @@ function scroollIntoRanges(index: number, scroll: boolean = true) {
     // parent.scrollIntoView({ behavior: 'smooth', block: "center" })
 
     if (scroll) {
-        console.log("scrollIntoRanges: ", props.edit)
+        // console.log("scrollIntoRanges: ", props.edit)
         const docContentElement = props.edit.querySelector('.protyle:not(.fn__none) :is(.protyle-content:not(.fn__none), .protyle-preview:not(.fn__none))') as HTMLElement;
         let doc_rect=docContentElement.getBoundingClientRect()
         let mid_y=doc_rect.top+doc_rect.height/2
@@ -282,7 +282,6 @@ function scroollIntoRanges(index: number, scroll: boolean = true) {
     props.plugin?.updateLastHighlightComponent?.(props.element);
 }
 function clickLast() { // 上一个
-    highlightHitResult(searchText.value, false)
     if ((resultIndex.value > 1 && resultIndex.value <= resultCount.value) && resultCount.value != 0) {
         resultIndex.value = resultIndex.value - 1
     }
@@ -295,7 +294,6 @@ function clickLast() { // 上一个
     scroollIntoRanges(resultIndex.value - 1)
 }
 function clickNext() { // 下一个
-    highlightHitResult(searchText.value, false)
     if (resultIndex.value < resultCount.value) {
         resultIndex.value = resultIndex.value + 1
     }
