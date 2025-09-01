@@ -41,6 +41,38 @@ const resultIndex = ref(0)
 const resultRange = ref()
 const placeholder = "🔍︎ (Shift) + Enter"
 
+/**
+ * 生成搜索关键词的变体，解决 Issue #42：同时搜索包含空白字符和不包含空白字符的结果
+ * @param searchStr 原始搜索关键词
+ * @returns 包含原始关键词和变体的数组
+ */
+function generateSearchVariants(searchStr: string): string[] {
+    if (!searchStr) return [];
+    
+    const variants = [searchStr];
+    
+    // 去除前后空白字符的变体
+    const trimmed = searchStr.trim();
+    if (trimmed !== searchStr) {
+        variants.push(trimmed);
+    }
+    
+    // 去除零宽空格和零宽连字的变体
+    const noZeroWidth = searchStr.replace(/[\u200B-\u200D\uFEFF]/g, '');
+    if (noZeroWidth !== searchStr) {
+        variants.push(noZeroWidth);
+    }
+    
+    // 去除所有空白字符的变体
+    const noWhitespace = searchStr.replace(/\s/g, '');
+    if (noWhitespace !== searchStr && noWhitespace.length > 0) {
+        variants.push(noWhitespace);
+    }
+    
+    // 去重并返回
+    return [...new Set(variants)];
+}
+
 const props = defineProps<{
     edit: Element,
     element: Element,
@@ -174,41 +206,134 @@ function calculateSearchResults(value: string, change: boolean) {
         currentNode = treeWalker.nextNode();
     }
 
-    let textNodeCnt = allTextNodes.length
-    let cur_nodeIdx = 0;
-    let txtNode
-    // 查找所有文本节点是否包含搜索词，并创建对应的 Range 对象
-    // 把全局匹配索引转换为文本节点的索引和offset,使得range可以跨多个文本节点
+    // 生成搜索关键词的变体，解决 Issue #42：同时搜索包含空白字符和不包含空白字符的结果
+    const searchVariants = generateSearchVariants(str);
     let ranges = [];
-    let startIndex = 0;
-    let endIndex = 0;
-    while ((startIndex = docText.indexOf(str, startIndex)) !== -1) {
-        const range = document.createRange();
-        endIndex = startIndex + str.length
+    
+    // 对每个变体进行搜索，并记录已处理的位置以避免重叠
+    const processedRanges = new Set<string>();
+    
+    // 双向匹配：不仅搜索关键词变体，还要考虑文档内容可能包含零宽空格的情况
+    // 收集所有匹配位置，然后按位置排序，确保索引顺序正确
+    const allMatches: Array<{startIndex: number, endIndex: number, searchStr: string}> = [];
+    
+    searchVariants.forEach((searchStr) => {
+        let startIndex = 0;
+        let endIndex = 0;
+        
+        // 方法1：直接搜索当前变体
+        while ((startIndex = docText.indexOf(searchStr, startIndex)) !== -1) {
+            endIndex = startIndex + searchStr.length;
+            allMatches.push({startIndex, endIndex, searchStr});
+            startIndex = endIndex;
+        }
+        
+        // 方法2：搜索去除零宽空格后的文档内容
+        const normalizedDocText = docText.replace(/[\u200B-\u200D\uFEFF]/g, '');
+        const normalizedSearchStr = searchStr.replace(/[\u200B-\u200D\uFEFF]/g, '');
+        
+        if (normalizedSearchStr !== searchStr || normalizedDocText !== docText) {
+            startIndex = 0;
+            
+            while ((startIndex = normalizedDocText.indexOf(normalizedSearchStr, startIndex)) !== -1) {
+                endIndex = startIndex + normalizedSearchStr.length;
+                
+                // 将标准化后的位置转换为原始文档中的位置
+                const originalStartIndex = findOriginalPosition(docText, normalizedDocText, startIndex);
+                const originalEndIndex = findOriginalPosition(docText, normalizedDocText, endIndex);
+                
+                if (originalStartIndex !== -1 && originalEndIndex !== -1) {
+                    allMatches.push({startIndex: originalStartIndex, endIndex: originalEndIndex, searchStr});
+                }
+                startIndex = endIndex;
+            }
+        }
+    });
+    
+    // 按起始位置排序，确保搜索结果索引顺序正确
+    allMatches.sort((a, b) => a.startIndex - b.startIndex);
+    
+    // 去重并创建 Range
+    allMatches.forEach((match) => {
+        // 检查是否与已处理的范围重叠
+        let isOverlapping = false;
+        for (const processedRange of processedRanges) {
+            const [procStart, procEnd] = processedRange.split('-').map(Number);
+            if (match.startIndex < procEnd && match.endIndex > procStart) {
+                isOverlapping = true;
+                break;
+            }
+        }
+        
+        if (!isOverlapping) {
+            createRangeForPosition(match.startIndex, match.endIndex, 0, allTextNodes, incr_lens, processedRanges, ranges);
+        }
+    });
+    
+    // 辅助函数：为指定位置创建 Range
+    function createRangeForPosition(startIndex: number, endIndex: number, cur_nodeIdx: number, allTextNodes: Text[], incr_lens: number[], processedRanges: Set<string>, ranges: Range[]): boolean {
         try {
-            while (cur_nodeIdx < textNodeCnt - 1 && incr_lens[cur_nodeIdx] <= startIndex) {
-                cur_nodeIdx++
+            const range = document.createRange();
+            
+            // 找到起始位置对应的文本节点和偏移量
+            let startNodeIdx = cur_nodeIdx;
+            while (startNodeIdx < allTextNodes.length - 1 && incr_lens[startNodeIdx] <= startIndex) {
+                startNodeIdx++
             }
-            txtNode = allTextNodes[cur_nodeIdx]
-            let startOffset = startIndex - incr_lens[cur_nodeIdx] + txtNode.textContent.length;
-            range.setStart(txtNode, startOffset);
-
-            while (cur_nodeIdx < textNodeCnt - 1 && incr_lens[cur_nodeIdx] < endIndex) {
-                cur_nodeIdx++
+            const startNode = allTextNodes[startNodeIdx];
+            const startOffset = startIndex - (startNodeIdx > 0 ? incr_lens[startNodeIdx - 1] : 0);
+            
+            // 找到结束位置对应的文本节点和偏移量
+            let endNodeIdx = startNodeIdx;
+            while (endNodeIdx < allTextNodes.length - 1 && incr_lens[endNodeIdx] < endIndex) {
+                endNodeIdx++
             }
-            txtNode = allTextNodes[cur_nodeIdx]
-            let endOffset = endIndex - incr_lens[cur_nodeIdx] + txtNode.textContent.length;
-            range.setEnd(txtNode, endOffset);
+            const endNode = allTextNodes[endNodeIdx];
+            const endOffset = endIndex - (endNodeIdx > 0 ? incr_lens[endNodeIdx - 1] : 0);
+            
+            range.setStart(startNode, startOffset);
+            range.setEnd(endNode, endOffset);
             
             // 排除 style 元素内的搜索结果
-            // TODO: 试试改用 innerText 的效果 https://developer.mozilla.org/zh-CN/docs/Web/API/Node/textContent#与_innertext_的区别
             if (range.commonAncestorContainer.parentElement?.tagName?.toLowerCase() !== 'style') {
                 ranges.push(range);
+                processedRanges.add(`${startIndex}-${endIndex}`);
+                return true;
             }
         } catch (error) {
             console.error("Error setting range in node:", error);
         }
-        startIndex = endIndex;
+        return false;
+    }
+    
+    // 辅助函数：将标准化后的位置转换为原始文档中的位置
+    function findOriginalPosition(originalText: string, normalizedText: string, normalizedIndex: number): number {
+        // 通过比较原始文本和标准化文本，精确定位对应位置
+        let originalIndex = 0;
+        let normalizedIndexCount = 0;
+        
+        // 遍历原始文本，跳过零宽字符，直到达到标准化文本中的目标位置
+        while (originalIndex < originalText.length && normalizedIndexCount < normalizedIndex) {
+            // 检查当前字符是否为零宽字符
+            if (!/[\u200B-\u200D\uFEFF]/.test(originalText[originalIndex])) {
+                normalizedIndexCount++;
+            }
+            originalIndex++;
+        }
+        
+        // 验证找到的位置是否正确：检查从该位置开始的文本是否与标准化文本匹配
+        if (normalizedIndexCount === normalizedIndex && originalIndex <= originalText.length) {
+            // 验证：从找到的位置开始，去除零宽字符后应该与标准化文本从 normalizedIndex 开始的部分匹配
+            const remainingOriginal = originalText.slice(originalIndex).replace(/[\u200B-\u200D\uFEFF]/g, '');
+            const remainingNormalized = normalizedText.slice(normalizedIndex);
+            
+            // 如果剩余部分匹配，说明位置正确
+            if (remainingOriginal.startsWith(remainingNormalized.substring(0, Math.min(remainingOriginal.length, remainingNormalized.length)))) {
+                return originalIndex;
+            }
+        }
+        
+        return -1;
     }
 
     // 更新结果计数和范围

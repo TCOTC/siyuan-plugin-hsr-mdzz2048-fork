@@ -14,6 +14,10 @@
 
 #### 近期更新
 
+##### 2025-09-01
+
+- 支持搜索包含零宽空格的文本 [#42](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/42)
+
 ##### 2025-08-10
 
 - 切换页签时重新搜索 [#2](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/2)
