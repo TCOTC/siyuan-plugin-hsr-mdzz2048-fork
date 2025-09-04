@@ -207,8 +207,11 @@ function calculateSearchResults(value: string, change: boolean) {
     }
 
     // 获取文档根,后续直接对全文档文本进行搜索
-    const docRoot = props.edit.querySelector('.protyle:not(.fn__none) :is(.protyle-content:not(.fn__none) .protyle-wysiwyg, .protyle-preview:not(.fn__none) .b3-typography)') as HTMLElement;
+    const docRoot = props.edit.querySelector(':scope > .protyle:not(.fn__none) :is(.protyle-content:not(.fn__none) .protyle-wysiwyg, .protyle-preview:not(.fn__none) .b3-typography)') as HTMLElement;
     const docText = docRoot.textContent.toLowerCase();
+    // console.log("props.edit: ", props.edit);
+    // console.log("docRoot: ", docRoot);
+    // console.log("docText: ", docText);
 
     // 准备一个数组来保存所有文本节点
     const allTextNodes = [];
@@ -405,7 +408,7 @@ function scroollIntoRanges(index: number, scroll: boolean = true) {
 
     if (scroll) {
         // console.log("scrollIntoRanges: ", props.edit)
-        const docContentElement = props.edit.querySelector('.protyle:not(.fn__none) :is(.protyle-content:not(.fn__none), .protyle-preview:not(.fn__none))') as HTMLElement;
+        const docContentElement = props.edit.querySelector(':scope > .protyle:not(.fn__none) :is(.protyle-content:not(.fn__none), .protyle-preview:not(.fn__none))') as HTMLElement;
         let doc_rect=docContentElement.getBoundingClientRect()
         let mid_y=doc_rect.top+doc_rect.height/2
         let range_rect = range.getBoundingClientRect();
