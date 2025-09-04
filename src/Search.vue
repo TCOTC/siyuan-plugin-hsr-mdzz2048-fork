@@ -126,7 +126,7 @@ function eventBusHandle(event: CustomEvent) {
     // console.log("event.detail: ", event.detail);
     // console.log("resultIndex.value: ", resultIndex.value);
     if (["savedoc", "rename"].includes(event.detail.cmd)) {
-        // console.log("eventBusHandle");
+        // 处理 "ws-main" 事件
         // savedoc 之后可能有嵌入块更新，需要等一会
         clearTimeout(typingTimer);
         typingTimer = window.setTimeout(() => {
@@ -145,6 +145,24 @@ function eventBusHandle(event: CustomEvent) {
         }, doneTypingInterval);
     } else if (["loaded-protyle-dynamic", "loaded-protyle-static", "switch-protyle", "switch-protyle-mode"].includes(event.type)) {
         // 动态加载、静态加载、切换页签后需要刷新搜索结果并高亮，并重置 resultIndex
+        const protyleElement = event.detail?.protyle?.element;
+        if (!protyleElement) {
+            // 不存在编辑器，则不执行高亮
+            // console.log("protyleElement: ", protyleElement);
+            return;
+        }
+        const layoutTabContainer = protyleElement.closest(".layout-tab-container");
+        if (layoutTabContainer && !layoutTabContainer.contains(props.element)) {
+            // 如果这个组件不存在于对应的页签中，则不执行高亮
+            // console.log("layoutTabContainer: ", layoutTabContainer);
+            return;
+        }
+        const blockPopover = protyleElement.closest(".block__popover");
+        if (blockPopover && !blockPopover.contains(props.element)) {
+            // 如果这个组件不存在于对应的浮窗中，则不执行高亮
+            // console.log("blockPopover: ", blockPopover);
+            return;
+        }
         clearTimeout(typingTimer);
         typingTimer = window.setTimeout(() => {
             // 这里无论是否为最后高亮组件，都重置 resultIndex，避免索引错位
@@ -178,7 +196,7 @@ function calculateSearchResults(value: string, change: boolean) {
     if (!str) {
         // 当搜索文本为空时，清除已有的高亮
         // 但不需要重置计数，方便撤回文本框编辑的时候恢复索引位置
-        CSS.highlights.clear();
+        clearHighlight();
         return [];
     }
 
@@ -349,12 +367,12 @@ function highlightHitResult(value: string, change: boolean) {
     
     if (ranges.length === 0) {
         // 当没有搜索结果时，清除高亮
-        CSS.highlights.clear();
+        clearHighlight();
         return;
     }
 
     // 清除上个高亮
-    CSS.highlights.clear()
+    clearHighlight();
 
     // 创建高亮对象
     const searchResultsHighlight = new Highlight(...ranges)
@@ -364,6 +382,12 @@ function highlightHitResult(value: string, change: boolean) {
     
     // 更新最后执行 CSS.highlights.set 的组件记录
     props.plugin?.updateLastHighlightComponent?.(props.element);
+}
+
+// 清除高亮
+function clearHighlight() {
+    CSS.highlights.delete("search-results");
+    CSS.highlights.delete("search-focus");
 }
 
 // 暴露函数给外部调用
@@ -432,7 +456,7 @@ function clickNext() { // 下一个
 }
 function clickClose() { // 关闭
     // 清除高亮
-    CSS.highlights.clear()
+    clearHighlight();
     // 销毁当前组件实例
     props.plugin?.closeCurrentSearchDialog?.(props.element);
 }

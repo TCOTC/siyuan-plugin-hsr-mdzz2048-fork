@@ -34,7 +34,7 @@
     transition: background-color 0.3s;
 }
 .highlight-search-result .search-dialog .search-tools>div:active {
-    background-color: var(--b3-theme-on-surface);
+    background-color: var(--b3-theme-on-surface-light);
     transition: background-color 0.2s;
 }
 // 浮窗内的搜索组件，需要尽量靠边
