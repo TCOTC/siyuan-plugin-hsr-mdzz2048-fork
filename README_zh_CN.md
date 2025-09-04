@@ -14,6 +14,11 @@
 
 #### 近期更新
 
+##### 2025-09-04
+
+- 解决与原生搜索高亮的冲突 [#45](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/45)
+- 存在搜索页签时，高亮搜索匹配不到当前文档 [#29](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/29)
+
 ##### 2025-09-01
 
 - 支持搜索包含零宽空格的文本 [#42](https://github.com/TCOTC/siyuan-plugin-hsr-mdzz2048-fork/issues/42)
