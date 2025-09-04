@@ -208,6 +208,7 @@ function calculateSearchResults(value: string, change: boolean) {
 
     // 获取文档根,后续直接对全文档文本进行搜索
     const docRoot = props.edit.querySelector(':scope > .protyle:not(.fn__none) :is(.protyle-content:not(.fn__none) .protyle-wysiwyg, .protyle-preview:not(.fn__none) .b3-typography)') as HTMLElement;
+    if (!docRoot) return [];
     const docText = docRoot.textContent.toLowerCase();
     // console.log("props.edit: ", props.edit);
     // console.log("docRoot: ", docRoot);
